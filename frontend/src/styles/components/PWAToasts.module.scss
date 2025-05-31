@@ -1,0 +1,52 @@
+@use "@styles/_variables";
+
+.installPrompt {
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+
+  &Text {
+    max-width: 150px;
+  }
+
+  &Buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    min-width: 100px;
+
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: background-color 0.2s ease;
+
+      &:first-of-type {
+        background-color: variables.$primary-color;
+        color: variables.$background-color;
+      }
+
+      &:last-of-type {
+        background-color: variables.$background-color;
+        color: variables.$primary-color;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    &Text {
+      align-self: center;
+      text-align: center;
+      max-width: none;
+      width: 100%;
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+  }
+}

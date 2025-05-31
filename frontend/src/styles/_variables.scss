@@ -1,0 +1,17 @@
+//colors
+$primary-color: var(--primary-color, #328E6E) !default;
+$secondary-color: var(--secondary-color, #90C67C) !default;
+$accent-color: var(--accent-color, #67AE6E) !default;
+$background-color: var(--background-color, #fcfcfa) !default;
+$disabled-color: var(--disabled-color, #c2c6ca) !default;
+$text-color: var(--text-color, #121212) !default;
+$error-color: var(--error-color, #b00020) !default;
+$warning-color: var(--warning-color, #ff9800) !default;
+$success-color: var(--success-color, #1cb04a) !default;
+
+//breakpoints
+$xxl-breakpoint: 1536px;
+$xl-breakpoint: 1200px;
+$lg-breakpoint: 992px;
+$md-breakpoint: 768px;
+$sm-breakpoint: 600px;
