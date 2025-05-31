@@ -1,6 +1,5 @@
 import { DateTime } from "luxon";
-
-type DateString = `${number}-${number}-${number}`;
+import { DateString } from "../utils";
 
 export class BalanceEstimator {
   private balances: Map<`${DateString}-${number}`, number>;
@@ -12,11 +11,17 @@ export class BalanceEstimator {
   getBalances(
     from: DateString,
     to: DateString
-  ): { start: DateString; balances: number[] } {
+  ): {
+    start: DateString;
+    balances: { balance: number; freeDuration: number }[];
+  } {
     const balances = [];
     for (let date = from; date <= to; date = addDays(date, 1)) {
       for (let hour = 0; hour < 24; hour++) {
-        balances.push(this.getBalance(date, hour));
+        balances.push({
+          balance: this.getBalance(date, hour),
+          freeDuration: 60 * 60 * Math.random(),
+        });
       }
     }
     return { start: from, balances };
@@ -34,7 +39,7 @@ export class BalanceEstimator {
   }
 
   private getDefaultBalance(date: DateString, hour: number): number {
-    return 1000;
+    return Math.floor(Math.random() * 1000);
   }
 }
 
