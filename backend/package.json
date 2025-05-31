@@ -18,6 +18,7 @@
     "dotenv": "^16.3.1",
     "express": "^5.0.1",
     "express-session": "^1.18.1",
+    "rrule": "^2.8.1",
     "luxon": "^3.6.1",
     "sqlite3": "^5.1.7"
   },

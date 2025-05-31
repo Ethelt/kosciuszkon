@@ -71,7 +71,8 @@ async function _createDefaultConfig(): Promise<SystemConfig> {
 }
 
 // Update system configuration
-export async function updateConfig(config: Partial<Omit<SystemConfig, 'id' | 'createdAt' | 'updatedAt'>>): Promise<SystemConfig> {
+export type PartialConfigToUpdate = Partial<Omit<SystemConfig, 'id' | 'createdAt' | 'updatedAt'>>;
+export async function updateConfig(config: PartialConfigToUpdate): Promise<SystemConfig> {
     const currentConfig = await getConfig();
     const updatedConfig = { ...currentConfig, ...config };
     const now = new Date().toISOString();

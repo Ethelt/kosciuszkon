@@ -12,4 +12,6 @@ export const DEFAULT_CONFIG: Omit<SystemConfig, 'id' | 'createdAt' | 'updatedAt'
     panelHeight: 2, // 2 meters
     averageHourlyConsumption: 0.5, // 0.5 kWh
     maxComputingCenterPower: 2, // 2 kW
-}; 
+};
+
+export const DEFAULT_TASK_STATUS = 'waiting';
