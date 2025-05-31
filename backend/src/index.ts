@@ -20,8 +20,8 @@ app.get("/", (req, res) => {
   res.json({ message: shared });
 });
 
-addConfigRoutes(app)
-addTasksRoutes(app)
+addConfigRoutes(app);
+addTasksRoutes(app);
 
 // start worker
 const worker = new Worker();

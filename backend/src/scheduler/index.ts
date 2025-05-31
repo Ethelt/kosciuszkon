@@ -1,15 +1,18 @@
 import { maxBy } from "lodash";
 import { BalanceEstimator } from "../balanceEstimator";
 import { DateTime } from "luxon";
-import { dateToSlotsNumber, getDateString } from "../utils";
 import { Task } from "@arabska/shared/src/types";
+import { getConfig } from "../config/model";
+import { getDateString, dateToSlotsNumber } from "../utils";
 
-class Scheduler {
-  constructor(private readonly balanceEstimator: BalanceEstimator) { }
+export class Scheduler {
+  constructor(private readonly balanceEstimator: BalanceEstimator) {}
 
   async scheduleAllTasks(): Promise<Task[]> {
     const tasks = await this.loadTasks();
     if (!tasks.length) return [];
+
+    const config = await getConfig();
 
     const prioritySortedTasks = tasks.toSorted((a, b) => orderPriority(a, b));
 
@@ -56,7 +59,15 @@ class Scheduler {
             })
             .toISO() ?? undefined;
 
-        console.log(foundSpot, index, task.plannedExecutionTime);
+        const usage =
+          (config.maxComputingCenterPower *
+            (task.estimatedWorkload ?? 0.5) *
+            (task.estimatedWorkingTime ?? 3600)) /
+          3600;
+
+        foundSpot.balance -= usage;
+
+        // console.log(foundSpot, index, task.plannedExecutionTime);
       }
     });
 
@@ -111,9 +122,6 @@ class Scheduler {
     ];
   }
 }
-
-const scheduler = new Scheduler(new BalanceEstimator());
-scheduler.scheduleAllTasks();
 
 function orderPriority(task1: Task, task2: Task) {
   const priorityOrder = ["critical", "high", "medium", "low"];

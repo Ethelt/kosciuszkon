@@ -1,11 +1,16 @@
 import { DateTime } from "luxon";
 import { DateString } from "../utils";
+import { getConfig } from "../config/model";
 
 export class BalanceEstimator {
-  private balances: Map<`${DateString}-${number}`, number>;
+  private balances: Map<string, number>;
 
   constructor() {
     this.balances = new Map();
+  }
+
+  async calculateBalances() {
+    const config = await getConfig();
   }
 
   getBalances(
@@ -28,17 +33,17 @@ export class BalanceEstimator {
   }
 
   private getBalance(date: DateString, hour: number): number {
-    const key: `${DateString}-${number}` = `${date}-${hour}`;
+    const key = DateTime.fromISO(date, { zone: "utc" }).set({ hour }).toISO()!;
     if (this.balances.has(key)) {
       return this.balances.get(key) || 0;
     }
 
-    const balance = this.getDefaultBalance(date, hour);
+    const balance = this.getDefaultBalance(key);
     this.balances.set(key, balance);
     return balance;
   }
 
-  private getDefaultBalance(date: DateString, hour: number): number {
+  private getDefaultBalance(date: string): number {
     return Math.floor(Math.random() * 1000);
   }
 }
