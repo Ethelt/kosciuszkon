@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { DateString } from "../utils";
 import { getConfig } from "../config/model";
+import { getWeather } from "./weatherEffectiveness";
 
 export class BalanceEstimator {
   private balances: Map<string, number>;
@@ -11,29 +12,42 @@ export class BalanceEstimator {
 
   async calculateBalances() {
     const config = await getConfig();
+    const weather = await getWeather(
+      config.coordinates.latitude,
+      config.coordinates.longitude
+    );
+    weather.forEach((hour) => {
+      this.balances.set(
+        hour.date,
+        config.maxInstallationPower * hour.effectiveness
+      );
+    });
   }
 
   getBalances(
-    from: DateString,
-    to: DateString
+    from: DateTime,
+    to: DateTime
   ): {
-    start: DateString;
+    start: DateTime;
     balances: { balance: number; freeDuration: number }[];
   } {
     const balances = [];
-    for (let date = from; date <= to; date = addDays(date, 1)) {
-      for (let hour = 0; hour < 24; hour++) {
-        balances.push({
-          balance: this.getBalance(date, hour),
-          freeDuration: 60 * 60 * Math.random(),
-        });
-      }
+    let currentDateTime = from;
+
+    while (currentDateTime < to) {
+      balances.push({
+        time: currentDateTime,
+        balance: this.getBalance(currentDateTime),
+        freeDuration: 60 * 60 * Math.random(),
+      });
+      currentDateTime = currentDateTime.plus({ hours: 1 });
     }
+
     return { start: from, balances };
   }
 
-  private getBalance(date: DateString, hour: number): number {
-    const key = DateTime.fromISO(date, { zone: "utc" }).set({ hour }).toISO()!;
+  private getBalance(date: DateTime): number {
+    const key = date.toISO()!;
     if (this.balances.has(key)) {
       return this.balances.get(key) || 0;
     }
