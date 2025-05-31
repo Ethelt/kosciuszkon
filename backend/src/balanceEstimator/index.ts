@@ -15,9 +15,7 @@ export class BalanceEstimator {
   ): { start: DateString; balances: number[] } {
     const balances = [];
     for (let date = from; date <= to; date = addDays(date, 1)) {
-      console.log(date);
       for (let hour = 0; hour < 24; hour++) {
-        console.log(hour);
         balances.push(this.getBalance(date, hour));
       }
     }
