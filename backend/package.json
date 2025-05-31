@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "@arabska/backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
@@ -17,7 +17,7 @@
     "dotenv": "^16.3.1",
     "express": "^5.0.1",
     "express-session": "^1.18.1",
-    "shared": "file:../shared"
+    "@arabska/shared": "file:../shared"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
