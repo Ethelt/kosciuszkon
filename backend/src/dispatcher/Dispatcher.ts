@@ -76,9 +76,11 @@ export class Dispatcher {
 
   private async planTasksExecution() {
     console.log("Planning tasks execution...");
-    const scheduler = new Scheduler(new BalanceEstimator());
+    const balanceEstimator = new BalanceEstimator();
+    await balanceEstimator.getDefaultAverages();
+    await balanceEstimator.calculateBalancesForNextWeek();
+    const scheduler = new Scheduler(balanceEstimator);
     await scheduler.scheduleAllTasks();
-    await new BalanceEstimator().calculateBalances();
 
     this.lastAnalysisTime = Date.now();
   }

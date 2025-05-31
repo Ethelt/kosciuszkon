@@ -1,16 +1,22 @@
 import { DateTime } from "luxon";
-import { DateString } from "../utils";
 import { getConfig } from "../config/model";
 import { getWeather } from "./weatherEffectiveness";
+import { getAverageEffectiveness } from "./averageEffectiveness";
 
 export class BalanceEstimator {
   private balances: Map<string, number>;
+  private dailyAveragesPerMonth: number[] = [];
 
   constructor() {
     this.balances = new Map();
   }
 
-  async calculateBalances() {
+  async getDefaultAverages() {
+    const config = await getConfig();
+    this.dailyAveragesPerMonth = await getAverageEffectiveness(config);
+  }
+
+  async calculateBalancesForNextWeek() {
     const config = await getConfig();
     const weather = await getWeather(
       config.coordinates.latitude,
@@ -52,23 +58,26 @@ export class BalanceEstimator {
       return this.balances.get(key) || 0;
     }
 
-    const balance = this.getDefaultBalance(key);
+    const balance = this.getDefaultBalance(date);
     this.balances.set(key, balance);
     return balance;
   }
 
-  private getDefaultBalance(date: string): number {
-    return Math.floor(Math.random() * 1000);
-  }
-}
+  private getDefaultBalance(date: DateTime): number {
+    const hour = date.hour;
+    // Calculate solar panel effectiveness based on hour of the day
+    // Peak effectiveness is around noon (12:00), with gradual decline towards sunrise/sunset
+    let hourlyEffectiveness = 0;
 
-function addDays(
-  date: DateString,
-  days: number
-): `${number}-${number}-${number}` {
-  const newDate = DateTime.fromISO(date) as DateTime<true>;
-  return newDate
-    .plus({ days })
-    .toISO()
-    .split("T")[0] as `${number}-${number}-${number}`;
+    if (hour >= 6 && hour <= 18) {
+      // Solar panels only generate power during daylight hours (6 AM to 6 PM)
+      // Use a sine wave to model the sun's path, with peak at noon
+      const hoursFromSunrise = hour - 6;
+      const dayLightHours = 12;
+      const sinePosition = (hoursFromSunrise / dayLightHours) * Math.PI;
+      hourlyEffectiveness = Math.sin(sinePosition);
+    }
+
+    return this.dailyAveragesPerMonth[date.month - 1] * hourlyEffectiveness;
+  }
 }
