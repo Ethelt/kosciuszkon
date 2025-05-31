@@ -17,8 +17,8 @@ export async function getConfig(): Promise<SystemConfig> {
         installationTilt: row.installationTilt,
         maxBatteryCapacity: row.maxBatteryCapacity,
         coordinates: {
-            latitude: row.coordinates.latitude,
-            longitude: row.coordinates.longitude,
+            latitude: row.latitude,
+            longitude: row.longitude,
         },
         panelHeight: row.panelHeight,
         averageHourlyConsumption: row.averageHourlyConsumption,
