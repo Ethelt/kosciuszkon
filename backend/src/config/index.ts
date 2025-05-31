@@ -1,6 +1,6 @@
 import { Database } from "sqlite3";
 import { Express } from 'express';
-import { getConfig, updateConfig } from "../config/model";
+import { getConfig, PartialConfigToUpdate, updateConfig } from "../config/model";
 import { BaseApiErrorResponse, BaseApiSuccessResponse } from "../types";
 import { SystemConfig } from "@arabska/shared/src/types";
 
@@ -12,7 +12,7 @@ export function addConfigRoutes(app: Express) {
 
     app.post("/config", async (req, res) => {
         try {
-            const configData = req.body as Partial<Omit<SystemConfig, 'id' | 'createdAt' | 'updatedAt'>>;
+            const configData = req.body as PartialConfigToUpdate;
             const updatedConfig = await updateConfig(configData);
 
             const response: BaseApiSuccessResponse<SystemConfig> = {

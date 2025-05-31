@@ -1,8 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { addConfigRoutes } from "./config";
 import { shared } from "@arabska/shared/src/index";
+import { addConfigRoutes } from "./config";
+import { addTasksRoutes } from "./tasks";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 });
 
 addConfigRoutes(app)
+addTasksRoutes(app)
 
 // Start server
 app.listen(PORT, () => {

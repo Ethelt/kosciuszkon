@@ -12,13 +12,14 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@arabska/shared": "file:../shared",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^5.0.1",
     "express-session": "^1.18.1",
-    "sqlite3": "^5.1.7",
-    "@arabska/shared": "file:../shared"
+    "rrule": "^2.8.1",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
