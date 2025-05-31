@@ -1,8 +1,8 @@
 import { Database } from "sqlite3";
 import { Express } from 'express';
 import { getConfig, updateConfig } from "../config/model";
-import { SystemConfig } from "../config/types";
 import { BaseApiErrorResponse, BaseApiSuccessResponse } from "../types";
+import { SystemConfig } from "@arabska/shared/src/types";
 
 export function addConfigRoutes(app: Express) {
     app.get("/config", async (req, res) => {

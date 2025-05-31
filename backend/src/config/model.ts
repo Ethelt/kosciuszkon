@@ -1,6 +1,6 @@
 import { DEFAULT_CONFIG } from "../constants";
 import { dbGet, dbRun } from "../db";
-import { SystemConfig } from "./types";
+import { SystemConfig } from "@arabska/shared/src/types";
 
 export async function getConfig(): Promise<SystemConfig> {
     const row = await dbGet<SystemConfig>('SELECT * FROM system_config WHERE id = 1');

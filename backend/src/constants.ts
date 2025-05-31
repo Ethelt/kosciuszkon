@@ -1,4 +1,4 @@
-import { SystemConfig } from "./config/types";
+import { SystemConfig } from "@arabska/shared/src/types";
 
 export const DEFAULT_CONFIG: Omit<SystemConfig, 'id' | 'createdAt' | 'updatedAt'> = {
     maxInstallationPower: 10, // 10 kWp
