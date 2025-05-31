@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { shared } from "shared";
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ app.use(express.json());
 
 // Basic route
 app.get("/", (req, res) => {
-  res.json({ message: "Server is running!" });
+  res.json({ message: shared });
 });
 
 // Start server
