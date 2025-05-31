@@ -3,6 +3,7 @@ import { Express } from 'express';
 import { getTask, getTasks, addTask, updateTask, removeTask, TaskToAdd } from "./model";
 import { BaseApiErrorResponse, BaseApiSuccessResponse } from "../types";
 import { Task } from "@arabska/shared/src/types";
+import { NEW_TASK_MESSAGE, worker } from "../dispatcher/Worker";
 
 export function addTasksRoutes(app: Express) {
     // Get all tasks
@@ -46,6 +47,10 @@ export function addTasksRoutes(app: Express) {
         try {
             const taskData = req.body as TaskToAdd;
             const newTask = await addTask(taskData);
+
+            // Notify worker about new task
+            worker?.sendMessage({ type: NEW_TASK_MESSAGE });
+
             const response: BaseApiSuccessResponse<Task> = {
                 success: true,
                 data: newTask
@@ -67,6 +72,10 @@ export function addTasksRoutes(app: Express) {
             if (taskData.id !== Number(req.params.id)) {
                 throw new Error('Task ID mismatch');
             }
+
+            // Notify worker about new task
+            worker?.sendMessage({ type: NEW_TASK_MESSAGE });
+
             const updatedTask = await updateTask(taskData);
             const response: BaseApiSuccessResponse<Task> = {
                 success: true,
@@ -90,6 +99,10 @@ export function addTasksRoutes(app: Express) {
                 success: true,
                 data: undefined
             };
+
+            // Notify worker about new task
+            worker?.sendMessage({ type: NEW_TASK_MESSAGE });
+
             res.json(response);
         } catch (error) {
             const response: BaseApiErrorResponse = {
