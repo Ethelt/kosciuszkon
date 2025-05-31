@@ -5,18 +5,6 @@ import styles from "@/styles/pages/Dashboard.module.scss";
 export const Dashboard: FC = () => {
   return (
     <div className={styles.dashboard}>
-      {/* Header */}
-      <div className={styles.header}>
-        <div className={styles.headerInfo}>
-          <h1>Dashboard</h1>
-          <p>Solar Energy Management Overview</p>
-        </div>
-        <div className={styles.systemStatus}>
-          <div className={styles.statusDot}></div>
-          System Online
-        </div>
-      </div>
-
       {/* Top Metrics */}
       <div className={styles.metricsFlex}>
         {/* Current Production */}
@@ -47,7 +35,7 @@ export const Dashboard: FC = () => {
           </div>
           <div className={styles.metricValue}>78%</div>
           <div className={styles.batteryBar}>
-            <div className={styles.batteryFill} style={{ width: "78%" }}></div>
+            <div className={styles.batteryFill}></div>
           </div>
         </div>
 

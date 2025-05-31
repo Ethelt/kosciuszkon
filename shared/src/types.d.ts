@@ -52,3 +52,20 @@ export type Task = {
     createdAt: string;
     updatedAt: string;
 }
+
+// Dashboard chat types
+
+export type ChartHour = {
+    balance: number;
+    label: string;
+}
+
+export type ChartTask = Pick<Task, "id" | "name" | "action" | "plannedExecutionTime" | "priority" | "description"> & {
+    hourIndex: number;
+    estimatedUsage: number;
+}
+
+export type DashboardChartData = {
+    hours: ChartHour[];
+    tasks: ChartTask[];
+}
