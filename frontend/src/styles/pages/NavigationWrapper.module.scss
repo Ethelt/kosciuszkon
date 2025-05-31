@@ -1,0 +1,13 @@
+.mainContent {
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.contentWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
