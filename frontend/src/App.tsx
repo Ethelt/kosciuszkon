@@ -4,7 +4,12 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { Bounce, ToastContainer } from "react-toastify";
 
 import { PWAToasts } from "@/components";
-import { DashboardPage, NavigationWrapper, NotFoundPage } from "@/pages";
+import {
+  DashboardPage,
+  InfrastructurePage,
+  NavigationWrapper,
+  NotFoundPage,
+} from "@/pages";
 
 import { StoreContext } from "./store/StoreContext";
 
@@ -21,6 +26,7 @@ const App: FC = observer(() => {
       <Routes>
         <Route path="/" element={<NavigationWrapper />}>
           <Route index element={<DashboardPage />} />
+          <Route path="infrastructure" element={<InfrastructurePage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

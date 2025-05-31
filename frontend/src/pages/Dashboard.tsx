@@ -35,7 +35,7 @@ export const Dashboard: FC = () => {
           </div>
           <div className={styles.metricValue}>78%</div>
           <div className={styles.batteryBar}>
-            <div className={styles.batteryFill} style={{ width: "78%" }}></div>
+            <div className={styles.batteryFill}></div>
           </div>
         </div>
 

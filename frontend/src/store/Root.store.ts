@@ -1,13 +1,13 @@
 import { AppStateStore } from "./AppState.store";
-import { DashboardLayoutStateStore } from "./DashboardLayoutState.store";
+import { InfrastructureStateStore } from "./InfrastructureState.store";
 
 export class RootStore {
   AppState: AppStateStore;
-  DashboardLayoutState: DashboardLayoutStateStore;
+  InfrastructureStateStore: InfrastructureStateStore;
 
   constructor() {
     this.AppState = new AppStateStore(this);
-    this.DashboardLayoutState = new DashboardLayoutStateStore(this);
+    this.InfrastructureStateStore = new InfrastructureStateStore(this);
   }
 }
 
