@@ -3,7 +3,7 @@ import { BalanceEstimator } from "../balanceEstimator";
 import { DateTime } from "luxon";
 import { Task } from "@arabska/shared/src/types";
 import { getConfig } from "../config/model";
-import { getDateString, dateToSlotsNumber } from "../utils";
+import { dateToSlotsNumber, getTaskUsage } from "../utils";
 
 export class Scheduler {
   constructor(private readonly balanceEstimator: BalanceEstimator) {}
@@ -16,17 +16,20 @@ export class Scheduler {
 
     const prioritySortedTasks = tasks.toSorted((a, b) => orderPriority(a, b));
 
-    const maxDeadline = maxBy(prioritySortedTasks, (t) => t.range.start)?.range
+    const maxDeadline = maxBy(prioritySortedTasks, (t) => t.range.end)?.range
       .end!;
 
-    const startDate = getDateString(DateTime.now());
-    const maxDeadlineDate = getDateString(DateTime.fromISO(maxDeadline));
+    const startDate = DateTime.now().setZone("utc").startOf("day");
+    const maxDeadlineDate = DateTime.fromISO(maxDeadline, {
+      zone: "utc",
+    });
 
     const { start, balances } = this.balanceEstimator.getBalances(
       startDate,
       maxDeadlineDate
     );
 
+    // console.log(startDate, maxDeadline);
     // balances.forEach((balance, index) => {
     //   console.log(index, balance);
     // });
@@ -35,8 +38,10 @@ export class Scheduler {
       const startDate = task.range.start;
       const endDate = task.range.end;
 
-      const startIndex = startDate ? dateToSlotsNumber(start, startDate) : 0;
-      const endIndex = endDate ? dateToSlotsNumber(start, endDate) : 0;
+      const startIndex = startDate
+        ? dateToSlotsNumber(start.toISO()!, startDate)
+        : 0;
+      const endIndex = endDate ? dateToSlotsNumber(start.toISO()!, endDate) : 0;
 
       const applicableSpots = balances.slice(startIndex, endIndex);
       // breaks when no spot has enough time
@@ -53,19 +58,16 @@ export class Scheduler {
       if (foundSpot) {
         const index = balances.indexOf(foundSpot);
         task.plannedExecutionTime =
-          DateTime.fromISO(start, { zone: "utc" })
+          start
             .plus({
               hours: index,
             })
             .toISO() ?? undefined;
 
-        const usage =
-          (config.maxComputingCenterPower *
-            (task.estimatedWorkload ?? 0.5) *
-            (task.estimatedWorkingTime ?? 3600)) /
-          3600;
+        const usage = getTaskUsage(task, config.maxComputingCenterPower ?? 2);
 
         foundSpot.balance -= usage;
+        foundSpot.freeDuration -= task.estimatedWorkingTime ?? 3600;
 
         // console.log(foundSpot, index, task.plannedExecutionTime);
       }
@@ -90,8 +92,8 @@ export class Scheduler {
       {
         priority: "low",
         range: {
-          start: "2025-05-31T16:00:00.000Z",
-          end: "2025-06-01T00:00:00.000Z",
+          start: "2025-06-01T16:00:00.000Z",
+          end: "2025-06-01T20:00:00.000Z",
         },
         action: "test",
         id: 1,
@@ -106,8 +108,8 @@ export class Scheduler {
       {
         priority: "critical",
         range: {
-          start: "2025-05-31T12:00:00.000Z",
-          end: "2025-06-01T00:00:00.000Z",
+          start: "2025-06-01T12:00:00.000Z",
+          end: "2025-06-02T00:00:00.000Z",
         },
         action: "test",
         id: 1,

@@ -1,7 +1,28 @@
-export function getWeather() {
-	
-}
+import { DateTime } from "luxon";
 
+export async function getWeather(latitude: number, longitude: number) {
+  const startDate = DateTime.now().toISO()!.split("T")[0];
+  const endDate = DateTime.now().plus({ days: 7 }).toISO()!.split("T")[0];
+  const response = await fetch(
+    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&start_date=${startDate}&end_date=${endDate}&hourly=temperature_2m,snow_depth,cloud_cover,sunshine_duration`
+  );
+  const data = (await response.json()) as Response;
+  const hours = data.hourly.time.map((time, index) => {
+    const date = DateTime.fromISO(time, { zone: "utc" }).toISO()!;
+
+    return {
+      date,
+      effectiveness: calculateSolarPanelEffectiveness(
+        data.hourly.sunshine_duration[index],
+        data.hourly.temperature_2m[index],
+        data.hourly.cloud_cover[index],
+        data.hourly.snow_depth[index]
+      ),
+    };
+  });
+
+  return hours;
+}
 
 /**
  * Calculates hourly solar panel effectiveness as a ratio of ideal conditions
@@ -44,21 +65,20 @@ function calculateSolarPanelEffectiveness(
   return effectiveness;
 }
 
-// Additional helper function for batch processing
-function calculateEffectivenessForMultipleHours(
-  weatherData: Array<{
-    sunshineDuration: number;
-    temperature: number;
-    cloudCover: number;
-    snowDepth: number;
-  }>
-): number[] {
-  return weatherData.map((data) =>
-    calculateSolarPanelEffectiveness(
-      data.sunshineDuration,
-      data.temperature,
-      data.cloudCover,
-      data.snowDepth
-    )
-  );
+interface Response {
+  latitude: number;
+  longitude: number;
+  generationtime_ms: number;
+  utc_offset_seconds: number;
+  timezone: string;
+  timezone_abbreviation: string;
+  elevation: number;
+  hourly: Hourly;
+}
+interface Hourly {
+  time: string[];
+  temperature_2m: number[];
+  snow_depth: number[];
+  cloud_cover: number[];
+  sunshine_duration: number[];
 }

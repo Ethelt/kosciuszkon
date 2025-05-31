@@ -47,7 +47,19 @@ export class Worker {
     isRunning(): boolean {
         return this.worker !== null;
     }
+
+    /**
+     * Sends a message to the worker thread
+     */
+    sendMessage(message: { type: string }): void {
+        if (!this.worker) {
+            throw new Error('Worker is not running');
+        }
+        this.worker.postMessage(message);
+    }
 }
+
+export const worker = new Worker();
 
 // Worker thread code
 if (!isMainThread && workerData?.type === 'dispatcher') {
