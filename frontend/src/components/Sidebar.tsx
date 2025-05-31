@@ -33,7 +33,7 @@ export const Sidebar: FC = observer(() => {
             className={({ isActive }) =>
               isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
             }>
-            <Home />
+            <Home size={24} />
             <span>Dashboard</span>
           </NavLink>
           <NavLink
@@ -41,7 +41,7 @@ export const Sidebar: FC = observer(() => {
             className={({ isActive }) =>
               isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
             }>
-            <Zap />
+            <Zap size={24} />
             <span>Solar Infrastructure</span>
           </NavLink>
           <NavLink
@@ -49,7 +49,7 @@ export const Sidebar: FC = observer(() => {
             className={({ isActive }) =>
               isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
             }>
-            <Clock />
+            <Clock size={24} />
             <span>Task Management</span>
           </NavLink>
           <NavLink
@@ -57,7 +57,7 @@ export const Sidebar: FC = observer(() => {
             className={({ isActive }) =>
               isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
             }>
-            <BarChart3 />
+            <BarChart3 size={24} />
             <span>Analytics</span>
           </NavLink>
         </nav>
