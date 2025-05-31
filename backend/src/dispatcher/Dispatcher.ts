@@ -77,7 +77,8 @@ export class Dispatcher {
   private async planTasksExecution() {
     console.log("Planning tasks execution...");
     const scheduler = new Scheduler(new BalanceEstimator());
-    scheduler.scheduleAllTasks();
+    await scheduler.scheduleAllTasks();
+    await new BalanceEstimator().calculateBalances();
 
     this.lastAnalysisTime = Date.now();
   }
