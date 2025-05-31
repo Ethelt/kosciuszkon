@@ -1,0 +1,1 @@
+# Kościuszkon Hackathon Project
