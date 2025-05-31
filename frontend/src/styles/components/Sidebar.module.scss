@@ -1,0 +1,132 @@
+@use "@styles/_variables.scss" as variables;
+
+.sidebar {
+  width: 300px;
+  background-color: variables.$background-color;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid variables.$disabled-color;
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: width 0.5s linear;
+}
+.collapsed {
+  width: 0;
+}
+
+.contentContainer {
+  height: 100%;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  margin-top: 32px;
+  width: fit-content;
+
+  &Icon {
+    width: 32px;
+    height: 32px;
+    background-color: variables.$primary-color;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: variables.$background-color;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  &Text {
+    overflow: hidden;
+    white-space: nowrap;
+    width: fit-content;
+
+    h1 {
+      font-weight: 600;
+      font-size: 18px;
+      margin: 0;
+      color: variables.$primary-color;
+    }
+
+    p {
+      font-size: 14px;
+      color: variables.$disabled-color;
+      margin: 0;
+    }
+  }
+}
+
+.navigation {
+  .navTitle {
+    font-size: 16px;
+    font-weight: 500;
+    color: variables.$primary-color;
+    margin-bottom: 16px;
+    margin-top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .navItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: variables.$disabled-color;
+    text-decoration: none;
+    margin-bottom: 4px;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    min-height: 40px;
+
+    span {
+      flex-shrink: 0;
+      width: 20px;
+      text-align: center;
+    }
+
+    &:hover {
+      color: variables.$text-color;
+      background-color: rgb(from variables.$accent-color r g b / 0.2);
+    }
+
+    &.active {
+      background-color: variables.$accent-color;
+      color: variables.$background-color;
+    }
+  }
+}
+
+.sidebarFooter {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  font-size: 14px;
+  color: variables.$disabled-color;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+// Responsive design
+// @media (max-width: 768px) {
+//   .sidebar {
+//     width: 100%;
+
+//     &.collapsed {
+//       width: 100%;
+//     }
+//   }
+
+//   .toggleButton {
+//     display: none;
+//   }
+// }

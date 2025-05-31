@@ -21,7 +21,11 @@ export default ({ mode }: { mode: string }) => {
       sourcemap: process.env.SOURCE_MAP === "true",
     },
     plugins: [
-      react(),
+      react({
+        babel: {
+          plugins: [["@babel/plugin-proposal-decorators", { legacy: true }]],
+        },
+      }),
       svgr(),
       VitePWA({
         mode: "development",

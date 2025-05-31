@@ -4,14 +4,16 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Bounce, ToastContainer } from "react-toastify";
 
 import { PWAToasts } from "@/components";
-import { DashboardPage, NotFoundPage } from "@/pages";
+import { DashboardPage, NavigationWrapper, NotFoundPage } from "@/pages";
 
 const App: FC = observer(() => {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<DashboardPage />} />
+          <Route path="/" element={<NavigationWrapper />}>
+            <Route index element={<DashboardPage />} />
+          </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <PWAToasts />
