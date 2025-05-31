@@ -3,14 +3,16 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable", "webworker", "esnext"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "types": ["node"],
+    "experimentalDecorators": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
@@ -19,9 +21,25 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "noImplicitAny": true,
+
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "@components/*": ["components/*"],
+      "@hooks/*": ["hooks/*"],
+      "@styles/*": ["styles/*"],
+      "@assets/*": ["assets/*"],
+      "@store/*": ["store/*"],
+      "@types/*": ["types/*"],
+      "@pages/*": ["pages/*"],
+      "@api/*": ["api/*"],
+      "@constants/*": ["constants/*"],
+      "@layouts/*": ["layouts/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "typeRoots": ["./node_modules/@types", "./src/types"]
 }

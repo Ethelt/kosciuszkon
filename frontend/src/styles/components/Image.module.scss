@@ -1,0 +1,22 @@
+@use "@styles/_variables.scss";
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  .text {
+    fill: variables.$primary-color;
+  }
+  .bg {
+    fill: variables.$background-color;
+  }
+  &Container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

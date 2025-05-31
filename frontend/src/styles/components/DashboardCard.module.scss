@@ -1,0 +1,137 @@
+@use "@styles/_variables.scss";
+
+.card {
+  background-color: variables.$background-color;
+  border: 3px solid variables.$primary-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 15px 25px 15px;
+  width: 100%;
+  min-height: fit-content;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+
+  &Content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: fit-content;
+    height: fit-content;
+  }
+
+  &Burger {
+    z-index: 2;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+  }
+
+  &Description {
+    white-space: wrap;
+    margin: 0;
+    margin-top: 1rem;
+  }
+
+  &Image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+    &Container {
+      padding-top: 10px;
+    }
+  }
+
+  &BottomSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+
+  &LastEntry {
+    display: flex;
+    flex-direction: column;
+    height: 10.5rem;
+    justify-content: center;
+    gap: 1rem;
+    &Text {
+      display: block;
+      margin: 0;
+    }
+  }
+
+  &Overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: variables.$primary-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 1;
+    opacity: 0;
+    &Active {
+      opacity: 1;
+      button {
+        cursor: pointer;
+      }
+    }
+    &Content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 1rem;
+
+      button {
+        color: variables.$background-color;
+        background-color: variables.$primary-color;
+        border: none;
+        outline: none;
+        box-shadow: none;
+        font-size: 1.2rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        svg {
+          display: block;
+          width: 2rem;
+          height: 2rem;
+          fill: variables.$background-color;
+        }
+        span {
+          display: block;
+          margin: 0;
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+
+  &Collection {
+    padding: 0 14px 14px 0;
+    height: 100%;
+    box-sizing: border-box;
+    .card {
+      // box-sizing: border-box;
+      height: 100%;
+      min-height: fit-content;
+      padding: 0 15px 15px 15px;
+      // width: 300px;
+      box-shadow: 5px 5px 0 -3px variables.$background-color,
+        5px 5px variables.$primary-color,
+        10px 10px 0 -3px variables.$background-color,
+        10px 10px variables.$primary-color;
+    }
+  }
+}
