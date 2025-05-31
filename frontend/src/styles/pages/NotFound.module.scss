@@ -1,0 +1,87 @@
+@use "@styles/_variables";
+
+.notFound {
+  &Container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: variables.$background-color;
+    box-sizing: border-box;
+    padding: 0 2em;
+    text-align: center;
+
+    a {
+      text-decoration: none;
+      color: variables.$accent-color;
+    }
+  }
+  &Error {
+    &Code {
+      font-size: 5rem;
+      font-weight: 700;
+      color: variables.$accent-color;
+      margin: 0;
+    }
+    &Name {
+      font-size: 2rem;
+      color: variables.$accent-color;
+      margin: 0;
+      margin-bottom: 1rem;
+    }
+    &Description {
+      font-size: 1.1rem;
+      color: variables.$text-color;
+      margin: 0;
+      margin-bottom: 2rem;
+    }
+  }
+  &ReturnLink {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: variables.$accent-color;
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    background-color: variables.$background-color;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: variables.$accent-color;
+      color: variables.$background-color;
+    }
+  }
+
+  @media only screen and (min-width: variables.$md-breakpoint) {
+    &Container {
+      padding: 0 5em;
+    }
+    &Error {
+      &Code {
+        font-size: 10rem;
+        font-weight: 700;
+        color: variables.$accent-color;
+        margin: 0;
+      }
+      &Name {
+        font-size: 4rem;
+        color: variables.$accent-color;
+        margin: 0;
+        margin-bottom: 1rem;
+      }
+      &Description {
+        font-size: 1.5rem;
+        color: variables.$text-color;
+        margin: 0;
+        margin-bottom: 3rem;
+      }
+    }
+    &ReturnLink {
+      font-size: 1.5rem;
+      padding: 1rem 1.5rem;
+      border-radius: 5px;
+    }
+  }
+}

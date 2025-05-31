@@ -1,0 +1,19 @@
+@use "@styles/_variables.scss";
+@use "@styles/_fonts.scss";
+
+html,
+body,
+#root {
+  background: variables.$background-color;
+  color: variables.$text-color;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat";
+}
+body,
+button,
+input,
+textarea {
+  font-family: "Montserrat";
+}

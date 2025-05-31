@@ -2,6 +2,9 @@
 # yarn lockfile v1
 
 
+"@arabska/shared@file:../shared":
+  version "1.0.0"
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.npmjs.org/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz"
