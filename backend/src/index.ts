@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { addConfigRoutes } from "./config";
-import { shared } from "@arabska/shared";
+import { shared } from "@arabska/shared/src/index";
 
 dotenv.config();
 
