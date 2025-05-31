@@ -3,7 +3,7 @@ import { BalanceEstimator } from "../balanceEstimator";
 import { DateTime } from "luxon";
 import { Task } from "@arabska/shared/src/types";
 import { getConfig } from "../config/model";
-import { dateToSlotsNumber } from "../utils";
+import { dateToSlotsNumber, getTaskUsage } from "../utils";
 
 export class Scheduler {
   constructor(private readonly balanceEstimator: BalanceEstimator) {}
@@ -64,11 +64,7 @@ export class Scheduler {
             })
             .toISO() ?? undefined;
 
-        const usage =
-          ((config.maxComputingCenterPower ?? 1000) *
-            (task.estimatedWorkload ?? 0.5) *
-            (task.estimatedWorkingTime ?? 3600)) /
-          3600;
+        const usage = getTaskUsage(task, config.maxComputingCenterPower ?? 2);
 
         foundSpot.balance -= usage;
         foundSpot.freeDuration -= task.estimatedWorkingTime ?? 3600;

@@ -36,6 +36,7 @@ export class BalanceEstimator {
 
     while (currentDateTime < to) {
       balances.push({
+        time: currentDateTime,
         balance: this.getBalance(currentDateTime),
         freeDuration: 60 * 60 * Math.random(),
       });
