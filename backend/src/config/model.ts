@@ -12,19 +12,19 @@ export async function getConfig(): Promise<SystemConfig> {
 
     return {
         id: row.id,
-        maxInstallationPower: row.maxInstallationPower,
-        systemLosses: row.systemLosses,
-        installationTilt: row.installationTilt,
-        maxBatteryCapacity: row.maxBatteryCapacity,
+        maxInstallationPower: row.max_installation_power,
+        systemLosses: row.system_losses,
+        installationTilt: row.installation_tilt,
+        maxBatteryCapacity: row.max_battery_capacity,
         coordinates: {
             latitude: row.latitude,
             longitude: row.longitude,
         },
-        panelHeight: row.panelHeight,
-        averageHourlyConsumption: row.averageHourlyConsumption,
-        maxComputingCenterPower: row.maxComputingCenterPower,
-        createdAt: row.createdAt,
-        updatedAt: row.updatedAt,
+        panelHeight: row.panel_height,
+        averageHourlyConsumption: row.average_hourly_consumption,
+        maxComputingCenterPower: row.max_computing_center_power,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
     };
 }
 
