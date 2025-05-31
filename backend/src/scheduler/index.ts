@@ -1,6 +1,6 @@
 import { Task } from "./types";
 
-class Scheduler {
+export class Scheduler {
   tasks: Task[];
   queue: Task[];
   private isInitialized = false;

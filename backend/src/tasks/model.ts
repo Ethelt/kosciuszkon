@@ -17,6 +17,13 @@ export async function getTasks(): Promise<Task[]> {
     return rows.map(parseTaskFromDb);
 }
 
+export async function getNotEndedTasksWithPlannedExecutionTime(): Promise<Task[]> {
+    const rows = await dbGetAll<Task[]>(`SELECT * FROM tasks 
+        WHERE status = 'waiting' AND planned_execution_time IS NOT NULL ORDER BY created_at DESC`
+    ) || [];
+    return rows.map(parseTaskFromDb);
+}
+
 export type TaskToAdd = Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'status'>;
 export async function addTask(task: TaskToAdd): Promise<Task> {
     const repeatingByWeekDay = task.repeating?.byWeekDay ? JSON.stringify(task.repeating.byWeekDay) : null;

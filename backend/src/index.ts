@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { shared } from "@arabska/shared/src/index";
 import { addConfigRoutes } from "./config";
 import { addTasksRoutes } from "./tasks";
+import { Worker } from "./dispatcher/Worker";
 
 dotenv.config();
 
@@ -21,6 +22,10 @@ app.get("/", (req, res) => {
 
 addConfigRoutes(app)
 addTasksRoutes(app)
+
+// start worker
+const worker = new Worker();
+worker.start();
 
 // Start server
 app.listen(PORT, () => {

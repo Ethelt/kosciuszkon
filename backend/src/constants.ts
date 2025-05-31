@@ -15,3 +15,5 @@ export const DEFAULT_CONFIG: Omit<SystemConfig, 'id' | 'createdAt' | 'updatedAt'
 };
 
 export const DEFAULT_TASK_STATUS = 'waiting';
+
+export const FRAME_TIME_MS = 60 * 60 * 1000; // 1 hour in milliseconds
