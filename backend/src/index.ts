@@ -5,6 +5,7 @@ import { shared } from "@arabska/shared/src/index";
 import { addConfigRoutes } from "./config";
 import { addTasksRoutes } from "./tasks";
 import { worker, Worker } from "./dispatcher/Worker";
+import { addDashboardRoutes } from "./dashboard";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
 
 addConfigRoutes(app);
 addTasksRoutes(app);
+addDashboardRoutes(app);
 
 // start worker
 worker.start();

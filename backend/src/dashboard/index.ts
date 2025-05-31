@@ -1,8 +1,11 @@
 import { ChartTask, DashboardChartData, Task } from '../../../shared/src/types';
 import { Express } from 'express';
 import { BaseApiErrorResponse, BaseApiSuccessResponse } from '../types';
-import { getTasks, getWaitingTasksInDateRange } from '../tasks/model';
-import { formatDate } from '../utils';
+import { getWaitingTasksInDateRange } from '../tasks/model';
+import { getTaskUsage } from '../utils';
+import { getConfig } from '../config/model';
+import { BalanceEstimator } from '../balanceEstimator';
+import { DateTime } from 'luxon';
 
 export function addDashboardRoutes(app: Express) {
     app.get("/dashboard", async (req, res) => {
@@ -46,12 +49,17 @@ async function generateDashboardData(date: Date): Promise<DashboardChartData> {
     });
 
     // Generate hours array
+    const balancesData = new BalanceEstimator().getBalances(DateTime.fromJSDate(startDate), DateTime.fromJSDate(endDate))
+    if (balancesData.balances.length != 24) {
+        console.error("generateDashboardData() bad count of estimated balances")
+    }
     const hours: DashboardChartData['hours'] = Array.from({ length: 24 }, (_, i) => ({
-        balance: 20, // TODO: Implement balance calculation
+        balance: balancesData.balances[i].balance,
         label: `${i.toString().padStart(2, '0')}:00`
     }));
 
     // Map tasks to their respective hours
+    const config = await getConfig();
     const tasksWithHours = dayTasks.map(task => {
         const taskTime = new Date(task.plannedExecutionTime!);
         const hourIndex = taskTime.getHours();
@@ -63,7 +71,7 @@ async function generateDashboardData(date: Date): Promise<DashboardChartData> {
             plannedExecutionTime: task.plannedExecutionTime!,
             priority: task.priority,
             description: task.description || '',
-            estimatedUsage: 10, // TODO: Implement usage calculation
+            estimatedUsage: getTaskUsage(task, config.maxInstallationPower),
             hourIndex
         };
 
