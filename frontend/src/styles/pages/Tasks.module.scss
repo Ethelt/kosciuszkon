@@ -1,2 +1,249 @@
+@use "@styles/_variables.scss";
+
 .tasks {
+  padding: 32px;
+  background-color: variables.$background-color;
+  min-height: 100vh;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+
+  @media (max-width: 1090px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.statCard {
+  background: variables.$background-color;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+
+  &.active {
+    border-color: variables.$success-color;
+    background: linear-gradient(
+      135deg,
+      rgb(from variables.$success-color r g b / 0.05) 0%,
+      variables.$background-color 100%
+    );
+  }
+
+  &.paused {
+    border-color: variables.$warning-color;
+    background: linear-gradient(
+      135deg,
+      rgb(from variables.$warning-color r g b / 0.05) 0%,
+      variables.$background-color 100%
+    );
+  }
+
+  &.error {
+    border-color: variables.$error-color;
+    background: linear-gradient(
+      135deg,
+      rgb(from variables.$error-color r g b / 0.05) 0%,
+      variables.$background-color 100%
+    );
+  }
+
+  &.total {
+    border-color: variables.$primary-color;
+    background: linear-gradient(
+      135deg,
+      rgb(from variables.$primary-color r g b / 0.05) 0%,
+      variables.$background-color 100%
+    );
+  }
+}
+
+.statHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.statTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: variables.$disabled-color;
+}
+
+.statIcon {
+  font-size: 20px;
+}
+
+.statValue {
+  font-size: 48px;
+  font-weight: bold;
+  color: variables.$text-color;
+  line-height: 1;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.taskCard {
+  background: variables.$background-color;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid variables.$disabled-color;
+}
+
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.taskTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: variables.$text-color;
+  }
+}
+
+.statusBadge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+
+  &.active {
+    background-color: rgb(from variables.$success-color r g b / 0.1);
+    color: variables.$success-color;
+  }
+
+  &.paused {
+    background-color: rgb(from variables.$warning-color r g b / 0.1);
+    color: variables.$warning-color;
+  }
+
+  &.error {
+    background-color: rgb(from variables.$error-color r g b / 0.1);
+    color: variables.$error-color;
+  }
+}
+
+.taskActions {
+  display: flex;
+  gap: 8px;
+}
+
+.actionButton {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgb(from variables.$disabled-color r g b / 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: rgb(from variables.$primary-color r g b / 0.1);
+  }
+}
+
+.taskDescription {
+  color: variables.$disabled-color;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.taskDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.taskSection {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.sectionIcon {
+  font-size: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.sectionContent {
+  flex: 1;
+}
+
+.sectionLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: variables.$text-color;
+  margin-bottom: 4px;
+}
+
+.commandText,
+.scheduleText {
+  display: block;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-size: 13px;
+  background: rgb(from variables.$disabled-color r g b / 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: variables.$text-color;
+  border: 1px solid rgb(from variables.$disabled-color r g b / 0.2);
+}
+
+.executionTimes {
+  font-size: 13px;
+  color: variables.$disabled-color;
+
+  div {
+    margin-bottom: 2px;
+  }
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .tasks {
+    padding: 16px;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .taskHeader {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .taskActions {
+    align-self: flex-end;
+  }
+
+  .taskDetails {
+    gap: 12px;
+  }
 }

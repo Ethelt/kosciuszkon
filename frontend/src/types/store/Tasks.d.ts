@@ -1,8 +1,9 @@
 type ITaskPriorities = "low" | "medium" | "high" | "critical";
 type ITaskStatuses = "waiting" | "succeeded" | "failed";
+type ITaskFrequency = "daily" | "weekly" | "monthly" | "yearly";
 
 type ITaskRepeating = {
-  frequency: "daily" | "weekly" | "monthly" | "yearly";
+  frequency: ITaskFrequency; // daily, weekly, monthly, yearly
   interval?: number; // interval between occurrences
   byWeekDay?: number[]; // 0-6 for Sunday-Saturday
   byMonthDay?: number[]; // 1-31
@@ -13,13 +14,11 @@ type ITaskRepeating = {
   startDate: string; // ISO date string
 };
 
-type ITask = {
-  id: number;
+interface IFormTask {
   name: string;
   action: string; // command to execude
   description?: string;
   priority: ITaskPriorities;
-  status: ITaskStatuses;
   range: {
     // the scope within which the task is to be performed, specified by user
     start?: string; // ISO date string
@@ -29,9 +28,19 @@ type ITask = {
   estimatedWorkload?: number; // in percentage
   repeating?: ITaskRepeating;
   plannedExecutionTime?: string; // ISO date string, when we plan to execute task
+}
+
+interface ITask extends IFormTask {
+  id: number;
+  status: ITaskStatuses;
   createdAt: string;
   updatedAt: string;
-};
+}
+
+interface IPostReturnTaskType {
+  success: boolean;
+  data: ITask;
+}
 
 // Dashboard chat types
 

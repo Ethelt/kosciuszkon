@@ -8,6 +8,7 @@ import { RootStore } from "./Root.store";
 export class TasksStateStore {
   rootStore;
   taskList: ITask[] = [];
+  currentTask: ITask | null = null;
 
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
@@ -16,24 +17,30 @@ export class TasksStateStore {
 
   fetchTasks = async () => {
     try {
-      const response = await client.get<ITask[]>("/tasks");
-      this.taskList = response.data;
+      const response = await client.get<{ success: boolean; data: ITask[] }>(
+        "/tasks",
+      );
+      console.log(response.data.data);
+      this.taskList = response.data.data;
     } catch (error) {
       console.error("Failed to fetch infrastructure data:", error);
     }
   };
 
-  // sendData = (data: IFormSystemConfig) => {
-  //   client
-  //     .post<IConfigPostReturnType, IFormSystemConfig>("/config", data)
-  //     .then(response => {
-  //       console.log("Data sent successfully:", response.data);
-  //       toast.success("Data saved successfully!", {
-  //         autoClose: 3000,
-  //       });
-  //     })
-  //     .catch(error => {
-  //       console.error("Failed to send data:", error);
-  //     });
-  // };
+  setCurrentTask = (task: ITask | null) => {
+    this.currentTask = task;
+  };
+
+  addTask = (data: IFormTask) => {
+    client
+      .post<IPostReturnTaskType, IFormTask>("/tasks", data)
+      .then(() => {
+        toast.success("Task added successfully!", {
+          autoClose: 3000,
+        });
+      })
+      .catch(error => {
+        console.error("Failed to send data:", error);
+      });
+  };
 }

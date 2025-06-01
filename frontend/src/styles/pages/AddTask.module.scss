@@ -6,45 +6,195 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
-  padding: 20px;
+  // min-height: 100vh;
+  // padding: 32px 20px;
+  box-sizing: border-box;
+  background-color: variables.$background-color;
 
   &Form {
     width: 100%;
-    max-width: 600px;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 32px;
     background-color: variables.$background-color;
-    padding: 20px;
-    border-radius: 8px;
+    padding: 32px;
+    border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid variables.$disabled-color;
+    box-sizing: border-box;
 
-    &Input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 4px;
-      border: 3px solid variables.$disabled-color;
-      font-size: 16px;
-
-      &:focus {
-        border-color: variables.$primary-color;
-        outline: none;
-      }
+    h2 {
+      margin: 0 0 32px 0;
+      color: variables.$text-color;
+      font-size: 24px;
+      font-weight: 600;
     }
 
-    &Button {
-      background-color: variables.$primary-color;
-      color: variables.$background-color;
-      padding: 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
+    &Container {
+      width: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+  }
 
-      &:hover {
-        background-color: variables.$secondary-color;
-      }
+  .formSection {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    h3 {
+      margin: 0;
+      color: variables.$text-color;
+      font-size: 18px;
+      font-weight: 500;
+      border-bottom: 2px solid variables.$primary-color;
+      padding-bottom: 8px;
+    }
+  }
+
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-weight: 500;
+      color: variables.$text-color;
+      font-size: 14px;
+    }
+  }
+
+  .formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .addTaskFormInput,
+  .addTaskFormSelect,
+  .addTaskFormTextarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 2px solid variables.$disabled-color;
+    font-size: 14px;
+    transition: border-color 0.2s;
+    background-color: variables.$background-color;
+    color: variables.$text-color;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: variables.$primary-color;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(variables.$primary-color, 0.1);
+    }
+
+    &::placeholder {
+      color: variables.$disabled-color;
+    }
+  }
+
+  .addTaskFormTextarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+  }
+
+  .checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    color: variables.$text-color;
+
+    .checkbox {
+      width: 16px;
+      height: 16px;
+      accent-color: variables.$primary-color;
+    }
+  }
+
+  .repeatingOptions {
+    padding: 20px;
+    background-color: rgba(variables.$primary-color, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(variables.$primary-color, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .formActions {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid variables.$disabled-color;
+  }
+
+  .addTaskFormButton {
+    background-color: variables.$primary-color;
+    color: variables.$background-color;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: variables.$accent-color;
+    }
+
+    &:disabled {
+      background-color: variables.$disabled-color;
+      cursor: not-allowed;
+    }
+  }
+
+  .cancelButton {
+    background-color: transparent;
+    color: variables.$text-color;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 2px solid variables.$disabled-color;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: rgba(variables.$disabled-color, 0.1);
+      border-color: variables.$text-color;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .addTask {
+    padding: 16px;
+  }
+
+  .addTaskForm {
+    padding: 20px;
+    gap: 24px;
+  }
+
+  .formActions {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
     }
   }
 }
