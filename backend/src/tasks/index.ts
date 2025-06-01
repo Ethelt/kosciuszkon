@@ -92,10 +92,11 @@ export function addTasksRoutes(app: Express) {
                 throw new Error('Task ID mismatch')
             }
 
-            // Notify worker about new task
+            const updatedTask = await updateTask(taskData)
+
+            // Notify worker about task modify
             worker?.sendMessage({ type: NEW_TASK_MESSAGE })
 
-            const updatedTask = await updateTask(taskData)
             const response: BaseApiSuccessResponse<Task> = {
                 success: true,
                 data: updatedTask,

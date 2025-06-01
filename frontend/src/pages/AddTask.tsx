@@ -28,7 +28,8 @@ const getCurrentDateTime = (): string => {
 
 export const AddTask: FC = observer(() => {
   const store = useContext(StoreContext);
-  const { currentTask, setCurrentTask, addTask } = store.TasksStateStore;
+  const { currentTask, setCurrentTask, addTask, editTask } =
+    store.TasksStateStore;
   const navigate = useNavigate();
 
   // Don't use useState for currentDateTime as we want it to refresh on each render
@@ -219,7 +220,14 @@ export const AddTask: FC = observer(() => {
     if (currentTask) {
       // Update existing task
       console.log("Updating task:", taskData);
-      // TODO: Implement update API call
+      editTask(
+        {
+          id: currentTask.id,
+          status: currentTask.status,
+          ...taskData,
+        } as IFormTask,
+        currentTask.id,
+      );
     } else {
       addTask(taskData as IFormTask);
     }

@@ -45,7 +45,7 @@ export const CustomTooltip = ({
                 key={index}
                 className={styles.powerBalance}
                 style={{ color: entry.color }}>
-                <strong>Net Energy Balance: {entry.value}</strong>
+                <strong>Energy Balance: {entry.value}</strong>
               </div>
             );
           }
@@ -75,7 +75,7 @@ export const CustomTooltip = ({
                   {task.name}
                 </div>
                 <div className={styles.powerValue}>
-                  Power: {entry.value} kWh
+                  Energy: {entry.value} kWh
                 </div>
                 {task.action && (
                   <div className={styles.taskDetail}>Action: {task.action}</div>

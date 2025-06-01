@@ -16,10 +16,10 @@ export class ChartStateStore {
     this.rootStore = rootStore;
   }
 
-  getChartData = async () => {
+  getChartData = async (date?: Date) => {
     try {
       const response = await client.get<{ data: IDashboardChartData }>(
-        "/chart",
+        `/chart${date ? `?date=${date.toISOString().split('T')[0]}` : ''}`,
       );
       this.chartData = response.data.data;
       console.log("Chart data fetched successfully:", response.data.data);
