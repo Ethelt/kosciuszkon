@@ -1,7 +1,7 @@
 import { Worker as NodeWorker, isMainThread, parentPort, workerData } from 'worker_threads';
 import { Dispatcher } from './Dispatcher';
 
-export const NEW_TASK_MESSAGE = 'newTaskAdded';
+export const NEW_TASK_MESSAGE = 'tasks_modify';
 
 export class Worker {
     private worker: NodeWorker | null = null;
