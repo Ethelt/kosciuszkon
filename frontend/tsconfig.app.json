@@ -40,6 +40,6 @@
       "@layouts/*": ["layouts/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../backend/src/utils/transformChartData.ts"],
   "typeRoots": ["./node_modules/@types", "./src/types"]
 }

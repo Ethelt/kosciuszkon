@@ -1,0 +1,51 @@
+@use "@styles/variables";
+
+.customTooltip {
+  background-color: variables.$background-color;
+  border: 1px solid variables.$disabled-color;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.timeLabel {
+  margin: 0 0 8px 0;
+  font-weight: bold;
+  color: variables.$text-color;
+  font-size: 14px;
+}
+
+.powerBalance {
+  margin: 4px 0;
+  font-weight: bold;
+
+  strong {
+    font-weight: bold;
+  }
+}
+
+.taskEntry {
+  border-left: 3px solid;
+  padding-left: 8px;
+  margin: 8px 0;
+  font-size: 13px;
+}
+
+.taskName {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.powerValue {
+  color: variables.$text-color;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.taskDetail {
+  color: variables.$disabled-color;
+  font-size: 12px;
+  margin: 1px 0;
+}
