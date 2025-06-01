@@ -49,7 +49,11 @@ export class Scheduler {
         ? dateToSlotsNumber(start.toISO()!, endDate)
         : balances.length;
 
-      const applicableSpots = balances.slice(startIndex, endIndex);
+      // Ensure we have at least one slot to check
+      const applicableSpots = balances.slice(
+        startIndex,
+        Math.max(startIndex + 1, endIndex)
+      );
       // breaks when no spot has enough time
       const foundSpot = maxBy(applicableSpots, (spot) => {
         if (
