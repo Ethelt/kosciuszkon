@@ -1,6 +1,5 @@
 import styles from "@styles/components/Graph/CustomTooltip.module.scss";
 
-// Custom tooltip component
 interface Task {
   name: string;
   action?: string;
@@ -38,7 +37,6 @@ export const CustomTooltip = ({
       <div className={styles.customTooltip}>
         <p className={styles.timeLabel}>Time: {label}</p>
         {payload.map((entry: PayloadEntry, index: number) => {
-          // Skip power balance line
           if (entry.dataKey === "powerBalance") {
             return (
               <div
@@ -50,18 +48,14 @@ export const CustomTooltip = ({
             );
           }
 
-          // Parse the unique key to get task info
           const [name, hourIndex, taskId] = entry.dataKey.split("|");
 
-          // Find the matching task
           const task = data.tasks.find(t => {
             if (taskId && t.id) {
-              // If we have IDs, use them for exact matching
               return (
                 t.id.toString() === taskId && t.hourIndex === Number(hourIndex)
               );
             }
-            // Fallback to name and hour matching
             return t.name === name && t.hourIndex === Number(hourIndex);
           });
 

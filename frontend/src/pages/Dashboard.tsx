@@ -14,7 +14,6 @@ export const Dashboard: FC = observer(() => {
     fetchTasks();
   }, [fetchTasks]);
 
-  // Calculate task statistics
   const activeTasks = taskList.filter(
     task => task.status === "succeeded",
   ).length;
@@ -24,7 +23,6 @@ export const Dashboard: FC = observer(() => {
 
   return (
     <div className={styles.dashboard}>
-      {/* Task Statistics Cards */}
       <div className={styles.statsGrid}>
         <div className={`${styles.statCard} ${styles.active}`}>
           <div className={styles.statHeader}>
@@ -59,7 +57,6 @@ export const Dashboard: FC = observer(() => {
         </div>
       </div>
 
-      {/* Analytics Graph */}
       <div className={styles.graphSection}>
         <AnalyticsGraph />
       </div>

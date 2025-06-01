@@ -7,7 +7,7 @@ import { RootStore } from "./Root.store";
 
 export class InfrastructureStateStore {
   rootStore;
-  formData: IFormSystemConfig = {} as IFormSystemConfig; // Initialize with an empty object
+  formData: IFormSystemConfig = {} as IFormSystemConfig;
 
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);

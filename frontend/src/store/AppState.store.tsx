@@ -35,7 +35,6 @@ const headerContent: Record<string, IHeaderData> = {
 export class AppStateStore {
   DEV_MODE = import.meta.env.DEV || false;
   rootStore;
-  // counter: number = 0;
   isSidebarCollapsed: boolean = false;
   currentPage: IHeaderData = headerContent["/"]; // Default page
 
@@ -43,10 +42,6 @@ export class AppStateStore {
     makeAutoObservable(this);
     this.rootStore = rootStore;
   }
-
-  // @action.bound addCounter() {
-  //   this.counter += 1;
-  // }
 
   setCurrentPage = (page: keyof typeof headerContent) => {
     console.log(headerContent[page]);

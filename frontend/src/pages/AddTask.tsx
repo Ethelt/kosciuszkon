@@ -6,14 +6,11 @@ import { StoreContext } from "@/store/StoreContext";
 
 import styles from "@/styles/pages/AddTask.module.scss";
 
-// Helper function to format dates for datetime-local input
 const formatDateForInput = (dateString?: string): string => {
   if (!dateString) return "";
 
-  // Try to create a valid date object
   const date = new Date(dateString);
 
-  // Check if date is valid
   if (isNaN(date.getTime())) return "";
 
   // Format to YYYY-MM-DDThh:mm format required by datetime-local input
@@ -55,12 +52,10 @@ export const AddTask: FC = observer(() => {
     startDate: "",
   });
 
-  // Fill form with currentTask data if editing
   useEffect(() => {
     if (currentTask) {
       console.log("Loading task for edit:", currentTask);
 
-      // For editing tasks, we'll allow past dates if they're already set
       const rangeStart = formatDateForInput(currentTask.range?.start);
       const rangeEnd = formatDateForInput(currentTask.range?.end);
       const repeatStartDate = formatDateForInput(
@@ -86,26 +81,21 @@ export const AddTask: FC = observer(() => {
   }, [currentTask]);
 
   const validateDates = (startDate: string, endDate: string): boolean => {
-    // Clear previous errors
     setDateError(null);
 
-    // Skip validation if both dates are empty
     if (!startDate && !endDate) return true;
 
-    // If only one date is provided, it's valid
     if (!startDate || !endDate) return true;
 
     const start = new Date(startDate);
     const end = new Date(endDate);
     const now = new Date();
 
-    // Always validate against current time, even for editing tasks
     if (start < now && !currentTask) {
       setDateError(`Start date must be in the future`);
       return false;
     }
 
-    // Validate start date is before end date
     if (start > end) {
       setDateError(`Start date cannot be after end date`);
       return false;
@@ -121,16 +111,13 @@ export const AddTask: FC = observer(() => {
   ) => {
     const { name, value, type } = e.target;
 
-    // Special handling for date inputs
     if (name === "rangeStart" || name === "rangeEnd") {
-      // Check if the new date is before now
       if (name === "rangeStart" && !currentTask) {
         const inputDate = new Date(value);
         const now = new Date();
 
         if (inputDate < now) {
           setDateError("Start date must be in the future");
-          // Don't update the form with an invalid date
           return;
         }
       }
@@ -140,7 +127,6 @@ export const AddTask: FC = observer(() => {
         [name]: value,
       };
 
-      // Validate dates when either start or end changes
       if (name === "rangeStart") {
         validateDates(value, formData.rangeEnd);
       } else {
@@ -151,16 +137,13 @@ export const AddTask: FC = observer(() => {
       return;
     }
 
-    // Special handling for repeating start date
     if (name === "startDate") {
-      // Check if the new repeating start date is before now
       if (!currentTask) {
         const inputDate = new Date(value);
         const now = new Date();
 
         if (inputDate < now) {
           setDateError("Schedule start date must be in the future");
-          // Don't update the form with an invalid date
           return;
         }
       }
@@ -168,7 +151,6 @@ export const AddTask: FC = observer(() => {
       validateDates(value, formData.rangeEnd);
     }
 
-    // Handle regular inputs
     setFormData(prev => ({
       ...prev,
       [name]:
@@ -179,10 +161,9 @@ export const AddTask: FC = observer(() => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Final validation before submission
     if (formData.rangeStart || formData.rangeEnd) {
       if (!validateDates(formData.rangeStart, formData.rangeEnd)) {
-        return; // Don't submit if dates are invalid
+        return;
       }
     }
 
@@ -215,7 +196,6 @@ export const AddTask: FC = observer(() => {
     };
 
     if (currentTask) {
-      // Update existing task
       console.log("Updating task:", taskData);
       editTask(
         {
@@ -229,7 +209,6 @@ export const AddTask: FC = observer(() => {
       addTask(taskData as IFormTask);
     }
 
-    // Reset form and navigate back
     navigate("/tasks");
   };
 
@@ -243,7 +222,6 @@ export const AddTask: FC = observer(() => {
         <h2>{currentTask ? "Edit Task" : "Add New Task"}</h2>
 
         <form className={styles.addTaskForm} onSubmit={handleSubmit}>
-          {/* Basic Information */}
           <div className={styles.formSection}>
             <h3>Basic Information</h3>
 
@@ -304,7 +282,6 @@ export const AddTask: FC = observer(() => {
             </div>
           </div>
 
-          {/* Time Range */}
           <div className={styles.formSection}>
             <h3>Execution Range (Optional)</h3>
             <div className={styles.formRow}>
@@ -342,7 +319,6 @@ export const AddTask: FC = observer(() => {
             )}
           </div>
 
-          {/* Estimates */}
           <div className={styles.formSection}>
             <h3>Estimates</h3>
 
@@ -380,7 +356,6 @@ export const AddTask: FC = observer(() => {
             </div>
           </div>
 
-          {/* Repeating Schedule */}
           <div className={styles.formSection}>
             <h3>Schedule</h3>
 
@@ -445,7 +420,6 @@ export const AddTask: FC = observer(() => {
             )}
           </div>
 
-          {/* Form Actions */}
           <div className={styles.formActions}>
             <button
               type="button"

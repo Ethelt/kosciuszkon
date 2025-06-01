@@ -8,7 +8,6 @@ import { type SWNotificationDataType } from "@/types/types";
 import styles from "@styles/components/PWAToasts.module.scss";
 
 export const PWAToasts = () => {
-  // check for updates every hour
   const period = 60 * 60 * 1000;
 
   const {
@@ -109,7 +108,6 @@ export const PWAToasts = () => {
     };
   }, []);
 
-  // Handle offline ready state
   useEffect(() => {
     if (offlineReady) {
       toast("App ready to work offline", {
@@ -120,7 +118,6 @@ export const PWAToasts = () => {
     }
   }, [offlineReady, setOfflineReady]);
 
-  // Handle need refresh state
   useEffect(() => {
     if (needRefresh) {
       const reloadData: SWNotificationDataType = {

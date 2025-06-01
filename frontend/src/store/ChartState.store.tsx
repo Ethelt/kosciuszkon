@@ -9,7 +9,7 @@ export class ChartStateStore {
   chartData: IDashboardChartData = {
     hours: [],
     tasks: [],
-  }; // Initialize with an empty object
+  };
 
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);

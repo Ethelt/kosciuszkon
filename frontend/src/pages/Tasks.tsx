@@ -18,7 +18,6 @@ export const Tasks: FC = observer(() => {
     fetchTasks();
   }, [fetchTasks]);
 
-  // Calculate task statistics
   const activeTasks = taskList.filter(
     task => task.status === "succeeded",
   ).length;
@@ -26,7 +25,6 @@ export const Tasks: FC = observer(() => {
   const errorTasks = taskList.filter(task => task.status === "failed").length;
   const totalTasks = taskList.length;
 
-  // Filter tasks based on active filter
   const filteredTasks =
     activeFilter === "all"
       ? taskList
@@ -50,7 +48,6 @@ export const Tasks: FC = observer(() => {
 
   return (
     <div className={styles.tasks}>
-      {/* Task Statistics Cards */}
       <div className={styles.statsGrid}>
         <div
           className={`${styles.statCard} ${styles.active} ${activeFilter === "succeeded" ? styles.selected : ""}`}
@@ -93,14 +90,12 @@ export const Tasks: FC = observer(() => {
         </div>
       </div>
 
-      {/* Filter indicator */}
       <div className={styles.filterIndicator}>
         {activeFilter === "all"
           ? "All Tasks"
           : `${activeFilter.charAt(0).toUpperCase() + activeFilter.slice(1)} Tasks (${filteredTasks.length} of ${totalTasks})`}
       </div>
 
-      {/* Task List */}
       <div className={styles.taskList}>
         {filteredTasks.length === 0 ? (
           <div className={styles.emptyState}>

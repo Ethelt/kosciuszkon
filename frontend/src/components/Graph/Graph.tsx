@@ -16,7 +16,6 @@ import { transformChartData } from "@/utils/transformChartData";
 
 import { CustomTooltip } from "./CustomTooltip";
 
-// Define an array of colors for the tasks
 const taskColors = [
   "#8884d8",
   "#82ca9d",
@@ -32,7 +31,6 @@ const taskColors = [
 
 export const Graph: FC<{ data: IDashboardChartData | null | undefined }> =
   observer(({ data }) => {
-    // Handle loading/null state
     if (!data) {
       return (
         <div
@@ -48,17 +46,14 @@ export const Graph: FC<{ data: IDashboardChartData | null | undefined }> =
       );
     }
 
-    // Transform data with unique task identifiers
     const { chartData, uniqueTaskKeys } = useMemo(() => {
       const result = transformChartData(data);
       return result;
     }, [data]);
 
-    // Debug output
     console.log("Transformed chart data:", chartData);
     console.log("Unique task keys:", uniqueTaskKeys);
 
-    // Handle empty data case
     if (chartData.length === 0) {
       return (
         <div
@@ -92,7 +87,6 @@ export const Graph: FC<{ data: IDashboardChartData | null | undefined }> =
           />
           <Legend />
 
-          {/* Render each unique task-hour combination as a bar */}
           {uniqueTaskKeys.map((key, idx) => (
             <Bar
               key={key}
@@ -103,7 +97,6 @@ export const Graph: FC<{ data: IDashboardChartData | null | undefined }> =
             />
           ))}
 
-          {/* Line for power balance */}
           <Line
             type="monotone"
             dataKey="powerBalance"

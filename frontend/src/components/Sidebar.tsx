@@ -25,7 +25,6 @@ export const Sidebar: FC = observer(() => {
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className={styles.navigation}>
           <h1 className={styles.navTitle}>Navigation</h1>
           <NavLink
