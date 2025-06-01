@@ -81,7 +81,7 @@ export const Graph: FC<{ data: IDashboardChartData | null | undefined }> =
           <XAxis dataKey="time" />
           <YAxis
             label={{
-              value: "Power (kWh)",
+              value: "Energy (kWh)",
               angle: -90,
               position: "insideLeft",
             }}
