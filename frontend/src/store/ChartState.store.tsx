@@ -9,7 +9,7 @@ export class ChartStateStore {
   chartData: IDashboardChartData = {
     hours: [],
     tasks: [],
-  } as IDashboardChartData; // Initialize with an empty object
+  }; // Initialize with an empty object
 
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
@@ -18,9 +18,11 @@ export class ChartStateStore {
 
   getChartData = async () => {
     try {
-      const response = await client.get<IDashboardChartData>("/chart");
-      console.log(response.data);
-      this.chartData = response.data;
+      const response = await client.get<{ data: IDashboardChartData }>(
+        "/chart",
+      );
+      this.chartData = response.data.data;
+      console.log("Chart data fetched successfully:", response.data.data);
     } catch (error) {
       console.error("Failed to fetch infrastructure data:", error);
     }

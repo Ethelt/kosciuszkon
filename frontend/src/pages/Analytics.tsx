@@ -10,6 +10,10 @@ export const Analytics: FC = observer(() => {
   useEffect(() => {
     getChartData();
   }, [getChartData]);
+
+  useEffect(() => {
+    console.log("chartData in Analytics:", chartData);
+  }, [chartData]);
   return (
     <div>
       <Graph data={chartData} />

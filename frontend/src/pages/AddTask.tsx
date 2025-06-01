@@ -96,10 +96,6 @@ export const AddTask: FC = observer(() => {
     } else {
       addTask(taskData as IFormTask);
     }
-
-    // Reset form and navigate back
-    setCurrentTask(null);
-    navigate("/tasks");
   };
 
   const handleCancel = () => {
