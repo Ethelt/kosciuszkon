@@ -16,7 +16,7 @@
           <li><a href="#ubuntudebian">Ubuntu/Debian</a></li>
         </ul>
         </li>
-        <li><a href="#set-up-env-file">Set up .env file</a></li>
+        <li><a href="#set-up-env-file">Set up◊ .env file</a></li>
       </ul>
     </li>
     <li>

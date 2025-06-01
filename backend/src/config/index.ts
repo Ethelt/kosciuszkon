@@ -1,42 +1,49 @@
 import { Database } from "sqlite3";
-import { Express } from 'express';
-import { getConfig, PartialConfigToUpdate, updateConfig } from "../config/model";
+import { Express } from "express";
+import {
+  getConfig,
+  PartialConfigToUpdate,
+  updateConfig,
+} from "../config/model";
 import { BaseApiErrorResponse, BaseApiSuccessResponse } from "../types";
 import { SystemConfig } from "@arabska/shared/src/types";
 
 export function addConfigRoutes(app: Express) {
-    app.get("/config", async (req, res) => {
-        const data = await getConfig()
-        res.json(data);
-    });
+  app.get("/config", async (req, res) => {
+    const data = await getConfig();
+    res.json(data);
+  });
 
-    app.post("/config", async (req, res) => {
-        try {
-            if (req.body == undefined) {
-                throw new Error("request body is undefined");
-            }
-            const configData = req.body as PartialConfigToUpdate;
-            const updatedConfig = await updateConfig(configData);
+  app.post("/config", async (req, res) => {
+    try {
+      if (req.body == undefined) {
+        throw new Error("request body is undefined");
+      }
+      const configData = req.body as PartialConfigToUpdate;
+      const updatedConfig = await updateConfig(configData);
 
-            const response: BaseApiSuccessResponse<SystemConfig> = {
-                success: true,
-                data: updatedConfig
-            };
+      const response: BaseApiSuccessResponse<SystemConfig> = {
+        success: true,
+        data: updatedConfig,
+      };
 
-            res.json(response);
-        } catch (error) {
-            const response: BaseApiErrorResponse = {
-                success: false,
-                error: error instanceof Error ? error.message : 'Failed to update configuration'
-            };
+      res.json(response);
+    } catch (error) {
+      const response: BaseApiErrorResponse = {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to update configuration",
+      };
 
-            res.status(500).json(response);
-        }
-    });
+      res.status(500).json(response);
+    }
+  });
 }
 
 export function createConfigTable(db: Database) {
-    db.run(`
+  db.run(`
         CREATE TABLE IF NOT EXISTS system_config (
           id INTEGER PRIMARY KEY CHECK (id = 1),
           max_installation_power REAL NOT NULL,
