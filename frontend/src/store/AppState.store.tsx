@@ -30,11 +30,6 @@ const headerContent: Record<string, IHeaderData> = {
     description: "Manage processing center cron jobs and scheduled tasks",
     content: null,
   },
-  "/analytics": {
-    title: "Analytics",
-    description: "Analyze energy consumption and production data",
-    content: null,
-  },
 };
 
 export class AppStateStore {

@@ -1,5 +1,5 @@
 import { FC, useContext } from "react";
-import { BarChart3, Clock, Home, Zap } from "lucide-react";
+import { Clock, Home, Zap } from "lucide-react";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 
@@ -51,14 +51,6 @@ export const Sidebar: FC = observer(() => {
             }>
             <Clock size={24} />
             <span>Task Management</span>
-          </NavLink>
-          <NavLink
-            to="/analytics"
-            className={({ isActive }) =>
-              isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
-            }>
-            <BarChart3 size={24} />
-            <span>Analytics</span>
           </NavLink>
         </nav>
       </div>
