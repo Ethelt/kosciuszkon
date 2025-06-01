@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { shared } from "@arabska/shared/src/index";
 import { addConfigRoutes } from "./config";
 import { addTasksRoutes } from "./tasks";
-import { worker, Worker } from "./dispatcher/Worker";
+import { worker } from "./dispatcher/Worker";
 import { addDashboardRoutes } from "./dashboard";
 
 dotenv.config();

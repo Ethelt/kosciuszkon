@@ -4,13 +4,17 @@ import { DateTime } from "luxon";
 import { Task } from "@arabska/shared/src/types";
 import { getConfig } from "../config/model";
 import { dateToSlotsNumber, getTaskUsage } from "../utils";
+import { getAllWaitingTasks } from "../tasks/model";
 
 export class Scheduler {
   constructor(private readonly balanceEstimator: BalanceEstimator) {}
 
   async scheduleAllTasks(): Promise<Task[]> {
     const tasks = await this.loadTasks();
-    if (!tasks.length) return [];
+    if (!tasks.length) {
+      console.log("No tasks to schedule");
+      return [];
+    }
 
     const config = await getConfig();
 
@@ -29,7 +33,11 @@ export class Scheduler {
       maxDeadlineDate
     );
 
-    // console.log(startDate, maxDeadline);
+    // console.log(
+    //   startDate.toISO(),
+    //   maxDeadline,
+    //   balances.map((b) => b.balance)
+    // );
     // balances.forEach((balance, index) => {
     //   console.log(index, balance);
     // });
@@ -69,7 +77,12 @@ export class Scheduler {
         foundSpot.balance -= usage;
         foundSpot.freeDuration -= task.estimatedWorkingTime ?? 3600;
 
-        // console.log(foundSpot, index, task.plannedExecutionTime);
+        // console.log(
+        //   "found",
+        //   foundSpot,
+        //   usage,
+        //   task.estimatedWorkingTime ?? 3600
+        // );
       }
     });
 
@@ -83,45 +96,46 @@ export class Scheduler {
       }
     });
 
-    // console.log(queue);
+    // console.log("queue", queue);
     return queue;
   }
 
   private async loadTasks(): Promise<Task[]> {
-    return [
-      {
-        priority: "low",
-        range: {
-          start: "2025-06-01T16:00:00.000Z",
-          end: "2025-06-01T20:00:00.000Z",
-        },
-        action: "test",
-        id: 1,
-        name: "Test Task",
-        description: "Test task description",
-        status: "waiting",
-        estimatedWorkingTime: 2500,
-        estimatedWorkload: 50,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-      {
-        priority: "critical",
-        range: {
-          start: "2025-06-01T12:00:00.000Z",
-          end: "2025-06-02T00:00:00.000Z",
-        },
-        action: "test",
-        id: 1,
-        name: "Test Task",
-        description: "Test task description",
-        status: "waiting",
-        estimatedWorkingTime: 100,
-        estimatedWorkload: 50,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-    ];
+    return await getAllWaitingTasks();
+    // return [
+    //   {
+    //     priority: "low",
+    //     range: {
+    //       start: "2025-06-01T16:00:00.000Z",
+    //       end: "2025-06-01T20:00:00.000Z",
+    //     },
+    //     action: "test",
+    //     id: 1,
+    //     name: "Test Task",
+    //     description: "Test task description",
+    //     status: "waiting",
+    //     estimatedWorkingTime: 2500,
+    //     estimatedWorkload: 50,
+    //     createdAt: new Date().toISOString(),
+    //     updatedAt: new Date().toISOString(),
+    //   },
+    //   {
+    //     priority: "critical",
+    //     range: {
+    //       start: "2025-06-01T12:00:00.000Z",
+    //       end: "2025-06-02T00:00:00.000Z",
+    //     },
+    //     action: "test",
+    //     id: 1,
+    //     name: "Test Task",
+    //     description: "Test task description",
+    //     status: "waiting",
+    //     estimatedWorkingTime: 100,
+    //     estimatedWorkload: 50,
+    //     createdAt: new Date().toISOString(),
+    //     updatedAt: new Date().toISOString(),
+    //   },
+    // ];
   }
 }
 
