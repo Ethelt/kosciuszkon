@@ -163,7 +163,7 @@ export async function updateTask(task: Task): Promise<Task> {
         ]
     );
 
-    return getTask(task.id);
+    return await getTask(task.id);
 }
 
 export async function removeTask(id: number): Promise<void> {
