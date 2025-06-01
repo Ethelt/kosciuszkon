@@ -28,6 +28,8 @@ export const AddTask: FC = observer(() => {
 
   // Fill form with currentTask data if editing
   useEffect(() => {
+    if (!currentTask) navigate("/tasks/add");
+
     if (currentTask) {
       setFormData({
         name: currentTask.name || "",
