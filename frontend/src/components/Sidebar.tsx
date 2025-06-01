@@ -20,7 +20,7 @@ export const Sidebar: FC = observer(() => {
             <Zap />
           </div>
           <div className={styles.logoText}>
-            <h1>EcoPlanner</h1>
+            <h1>GreenJob</h1>
             <p>Task Management</p>
           </div>
         </div>

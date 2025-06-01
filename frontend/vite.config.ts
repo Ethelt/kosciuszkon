@@ -40,8 +40,8 @@ export default ({ mode }: { mode: string }) => {
         registerType: "autoUpdate",
         selfDestroying: selfDestroying,
         manifest: {
-          name: "Eco Planner",
-          short_name: "Eco Planner",
+          name: "GreenJob",
+          short_name: "GreenJob",
           description:
             "App for managing your tasks for you in a sustainable way",
           theme_color: "#328E6E",
@@ -87,15 +87,15 @@ export default ({ mode }: { mode: string }) => {
     server:
       isDevelopment && certificatesExist
         ? {
-            https: {
-              key: fs.readFileSync(keyPath),
-              cert: fs.readFileSync(certPath),
-            },
-            host: "0.0.0.0",
-          }
-        : {
-            host: "0.0.0.0",
+          https: {
+            key: fs.readFileSync(keyPath),
+            cert: fs.readFileSync(certPath),
           },
+          host: "0.0.0.0",
+        }
+        : {
+          host: "0.0.0.0",
+        },
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"),
