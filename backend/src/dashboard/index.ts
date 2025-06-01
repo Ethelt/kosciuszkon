@@ -6,6 +6,7 @@ import { getTaskUsage } from '../utils'
 import { getConfig } from '../config/model'
 import { BalanceEstimator } from '../balanceEstimator'
 import { DateTime } from 'luxon'
+import { getWeather } from '../balanceEstimator/weatherEffectiveness'
 
 export function addDashboardRoutes(app: Express) {
     app.get('/chart', async (req, res) => {
@@ -52,7 +53,10 @@ async function generateDashboardData(date: Date): Promise<DashboardChartData> {
     })
 
     // Generate hours array
-    const balancesData = new BalanceEstimator().getBalances(
+    const balancesEstimator = new BalanceEstimator()
+    await balancesEstimator.calculateBalancesForNextWeek()
+    await balancesEstimator.getDefaultAverages()
+    const balancesData = balancesEstimator.getBalances(
         DateTime.fromJSDate(startDate),
         DateTime.fromJSDate(endDate)
     )
