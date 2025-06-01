@@ -57,8 +57,7 @@ class BalanceEstimator {
       return this.balances.get(key) || 0;
     }
 
-    const balance =
-      this.getDefaultBalance(date) - this.getEnergyCost(date.toISO()!);
+    const balance = this.getDefaultBalance(date);
     this.balances.set(key, balance);
     return balance;
   }

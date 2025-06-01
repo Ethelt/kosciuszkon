@@ -627,3 +627,100 @@
     }
   }
 }
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+
+  @media (max-width: 1090px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statCard {
+  background: variables.$background-color;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+
+  &.active {
+    border-color: variables.$success-color;
+    background: linear-gradient(
+      135deg,
+      rgb(from variables.$success-color r g b / 0.05) 0%,
+      variables.$background-color 100%
+    );
+  }
+
+  &.paused {
+    border-color: variables.$warning-color;
+    background: linear-gradient(
+      135deg,
+      rgb(from variables.$warning-color r g b / 0.05) 0%,
+      variables.$background-color 100%
+    );
+  }
+
+  &.error {
+    border-color: variables.$error-color;
+    background: linear-gradient(
+      135deg,
+      rgb(from variables.$error-color r g b / 0.05) 0%,
+      variables.$background-color 100%
+    );
+  }
+
+  &.total {
+    border-color: variables.$primary-color;
+    background: linear-gradient(
+      135deg,
+      rgb(from variables.$primary-color r g b / 0.05) 0%,
+      variables.$background-color 100%
+    );
+  }
+}
+
+.statHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.statTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: variables.$disabled-color;
+}
+
+.statIcon {
+  font-size: 20px;
+}
+
+.statValue {
+  font-size: 48px;
+  font-weight: bold;
+  color: variables.$text-color;
+  line-height: 1;
+}
+
+.graphSection {
+  background: variables.$background-color;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid variables.$disabled-color;
+  margin-bottom: 32px;
+}
+
+.graphContainer {
+  margin-top: 24px;
+  height: 400px;
+}
