@@ -29,8 +29,8 @@ export const Infrastructure: FC = observer(() => {
       maxComputingCenterPower:
         Number(formDataObject.get("maxComputingCenterPower")) || 0,
       coordinates: {
-        latitude: formData.coordinates?.latitude || 50.0647,
-        longitude: formData.coordinates?.longitude || 19.945,
+        latitude: Number(formDataObject.get("latitude")) || 50.0647,
+        longitude: Number(formDataObject.get("longitude")) || 19.945,
       },
     };
 
@@ -118,6 +118,34 @@ export const Infrastructure: FC = observer(() => {
             defaultValue={formData.maxComputingCenterPower || ""}
           />
         </label>
+        {formData.coordinates && (
+          <>
+            <label className={styles.formLabel}>
+              Latitude:
+              <input
+                className={styles.formInput}
+                type="number"
+                name="latitude"
+                step="any"
+                min={-90}
+                max={90}
+                defaultValue={formData.coordinates?.latitude || 50.0647}
+              />
+            </label>
+            <label className={styles.formLabel}>
+              Longitude:
+              <input
+                className={styles.formInput}
+                type="number"
+                name="longitude"
+                step="any"
+                min={-180}
+                max={180}
+                defaultValue={formData.coordinates?.longitude || 19.945}
+              />
+            </label>
+          </>
+        )}
         <div className={styles.formButtonContainer}>
           <button className={styles.formButton} type="submit">
             Save Configuration
