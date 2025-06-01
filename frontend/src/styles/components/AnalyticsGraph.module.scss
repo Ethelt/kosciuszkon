@@ -1,0 +1,722 @@
+@use "@styles/_variables.scss" as variables;
+
+.dashboard {
+    background-color: variables.$background-color;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+
+    &List {
+        width: 100%;
+        height: fit-content;
+        min-height: 100%;
+    }
+
+    &Grid {
+        width: 100%;
+        height: 100%;
+        min-height: calc(100vh - 60px);
+    }
+
+    &Edit {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 5rem;
+        height: 5rem;
+        margin: 3rem;
+        padding: 1rem;
+        border-radius: 50%;
+        background-color: variables.$accent-color;
+        cursor: pointer;
+
+        &Icon {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            fill: variables.$background-color;
+        }
+
+        &Grid::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-color: rgba(variables.$error-color, 0.2);
+            pointer-events: none;
+        }
+    }
+}
+
+.fixedHeader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background-color: variables.$background-color;
+    border-bottom: 1px solid variables.$disabled-color;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    z-index: 1000;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.sidebarToggle {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: variables.$primary-color;
+    color: variables.$background-color;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: variables.$accent-color;
+    }
+
+    span {
+        font-size: 16px;
+        font-weight: bold;
+    }
+}
+
+.headerInfo {
+    h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: variables.$text-color;
+        margin: 0 0 4px 0;
+    }
+
+    p {
+        color: variables.$disabled-color;
+        margin: 0;
+        font-size: 14px;
+    }
+}
+
+.systemStatus {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: rgba(variables.$success-color, 0.1);
+    color: variables.$success-color;
+    border-radius: 8px;
+
+    .statusDot {
+        width: 8px;
+        height: 8px;
+        background-color: variables.$success-color;
+        border-radius: 50%;
+    }
+}
+
+.dashboardBody {
+    margin-top: 80px; // Account for fixed header
+    display: flex;
+    min-height: calc(100vh - 80px);
+}
+
+.sidebar {
+    width: 256px;
+    background-color: variables.$background-color;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid variables.$disabled-color;
+    padding: 24px;
+    position: relative;
+    transition: width 0.3s ease;
+    overflow: hidden;
+
+    &.collapsed {
+        width: 72px;
+        padding: 24px 12px;
+    }
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+
+    &Icon {
+        width: 32px;
+        height: 32px;
+        background-color: variables.$primary-color;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: variables.$background-color;
+        font-weight: bold;
+    }
+
+    &Text {
+        h1 {
+            font-weight: 600;
+            font-size: 18px;
+            margin: 0;
+            color: variables.$text-color;
+        }
+
+        p {
+            font-size: 14px;
+            color: variables.$disabled-color;
+            margin: 0;
+        }
+    }
+}
+
+.nav {
+    &Title {
+        font-size: 14px;
+        font-weight: 500;
+        color: variables.$disabled-color;
+        margin-bottom: 16px;
+        margin-top: 0;
+    }
+
+    &Item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        color: variables.$disabled-color;
+        text-decoration: none;
+        margin-bottom: 4px;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: rgba(variables.$secondary-color, 0.1);
+        }
+
+        &.active {
+            background-color: rgba(variables.$primary-color, 0.1);
+            color: variables.$primary-color;
+        }
+    }
+}
+
+.sidebarFooter {
+    position: absolute;
+    bottom: 24px;
+    font-size: 14px;
+    color: variables.$disabled-color;
+}
+
+.mainContent {
+    flex: 1;
+    padding: 32px;
+    transition: margin-left 0.3s ease;
+
+    &.expanded {
+        max-width: none;
+    }
+}
+
+.metrics {
+    &Flex {
+        display: flex;
+        gap: 24px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
+
+    &Card {
+        background-color: variables.$background-color;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid variables.$disabled-color;
+        flex: 1;
+        min-width: 200px;
+    }
+}
+
+.card {
+    &Header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+
+        h3 {
+            font-size: 14px;
+            font-weight: 500;
+            color: variables.$disabled-color;
+            margin: 0;
+        }
+    }
+}
+
+.metric {
+    &Value {
+        font-size: 32px;
+        font-weight: bold;
+        color: variables.$text-color;
+        margin-bottom: 8px;
+    }
+
+    &Change {
+        font-size: 14px;
+        color: variables.$success-color;
+    }
+
+    &Target {
+        font-size: 14px;
+        color: variables.$disabled-color;
+    }
+}
+
+.battery {
+    &Bar {
+        width: 100%;
+        height: 8px;
+        background-color: variables.$disabled-color;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    &Fill {
+        height: 100%;
+        background-color: variables.$success-color;
+        border-radius: 4px;
+        transition: width 0.3s;
+    }
+}
+
+.grid {
+    &Status {
+        font-size: 24px;
+        font-weight: bold;
+        color: variables.$primary-color;
+        margin-bottom: 8px;
+    }
+
+    &Connection {
+        font-size: 14px;
+        color: variables.$disabled-color;
+    }
+}
+
+.bottom {
+    &Flex {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+}
+
+.section {
+    &Card {
+        background-color: variables.$background-color;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid variables.$disabled-color;
+        flex: 1;
+        min-width: 300px;
+    }
+
+    &Header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: variables.$text-color;
+            margin: 0;
+        }
+    }
+
+    &Icon {
+        color: variables.$primary-color;
+    }
+
+    &Desc {
+        color: variables.$disabled-color;
+        margin-bottom: 24px;
+    }
+}
+
+.parameters {
+    &List {
+        margin-bottom: 24px;
+    }
+
+    &Parameter {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    &Value {
+        color: variables.$primary-color;
+        font-weight: 600;
+    }
+
+    &Date {
+        color: variables.$disabled-color;
+    }
+}
+
+.status {
+    &Online {
+        padding: 4px 8px;
+        background-color: rgba(variables.$success-color, 0.1);
+        color: variables.$success-color;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    &Running {
+        padding: 4px 8px;
+        background-color: rgba(variables.$warning-color, 0.1);
+        color: variables.$warning-color;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    &Scheduled {
+        padding: 4px 8px;
+        background-color: rgba(variables.$secondary-color, 0.1);
+        color: variables.$secondary-color;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+}
+
+.task {
+    &Stats {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    &Stat {
+        text-align: center;
+        flex: 1;
+    }
+
+    &Number {
+        font-size: 32px;
+        font-weight: bold;
+        color: variables.$primary-color;
+        margin-bottom: 4px;
+    }
+
+    &Label {
+        font-size: 14px;
+        color: variables.$disabled-color;
+    }
+
+    &sList {
+        margin-bottom: 24px;
+    }
+
+    &Task {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+}
+
+.alerts {
+    &List {
+        margin-bottom: 24px;
+    }
+
+    &Success,
+    &Warning {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+    }
+
+    &Success {
+        background-color: rgba(variables.$success-color, 0.1);
+
+        .alertContent {
+            .alertTitle {
+                color: variables.$success-color;
+                font-weight: 500;
+                margin-bottom: 4px;
+            }
+
+            .alertDesc {
+                font-size: 14px;
+                color: variables.$success-color;
+            }
+        }
+    }
+
+    &Warning {
+        background-color: rgba(variables.$warning-color, 0.1);
+
+        .alertContent {
+            .alertTitle {
+                color: variables.$warning-color;
+                font-weight: 500;
+                margin-bottom: 4px;
+            }
+
+            .alertDesc {
+                font-size: 14px;
+                color: variables.$warning-color;
+            }
+        }
+    }
+}
+
+.primary {
+    &Button {
+        width: 100%;
+        background-color: variables.$primary-color;
+        color: variables.$background-color;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        &:hover {
+            background-color: variables.$accent-color;
+        }
+    }
+}
+
+.secondary {
+    &Button {
+        width: 100%;
+        border: 1px solid variables.$disabled-color;
+        color: variables.$text-color;
+        padding: 12px 16px;
+        border-radius: 8px;
+        background-color: variables.$background-color;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        &:hover {
+            background-color: rgba(variables.$secondary-color, 0.1);
+        }
+    }
+}
+
+.link {
+    &Button {
+        width: 100%;
+        color: variables.$primary-color;
+        padding: 8px;
+        text-align: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: rgba(variables.$primary-color, 0.1);
+        }
+    }
+}
+
+.quick {
+    &Actions {
+        margin-top: 32px;
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: variables.$text-color;
+            margin-bottom: 16px;
+        }
+    }
+}
+
+.action {
+    &Buttons {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 16px;
+        }
+    }
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+    .metricsFlex {
+        flex-direction: column;
+    }
+
+    .metricsCard {
+        min-width: auto;
+    }
+
+    .bottomFlex {
+        flex-direction: column;
+    }
+
+    .sectionCard {
+        min-width: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .fixedHeader {
+        padding: 0 16px;
+    }
+
+    .dashboardBody {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 16px;
+    }
+
+    .mainContent {
+        padding: 16px;
+    }
+
+    .metricsFlex {
+        flex-direction: column;
+    }
+
+    .actionButtons {
+        flex-direction: column;
+
+        button {
+            width: 100%;
+            min-width: auto;
+        }
+    }
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+
+    @media (max-width: 1090px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.statCard {
+    background: variables.$background-color;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+
+    &.active {
+        border-color: variables.$success-color;
+        background: linear-gradient(135deg,
+                rgb(from variables.$success-color r g b / 0.05) 0%,
+                variables.$background-color 100%);
+    }
+
+    &.paused {
+        border-color: variables.$warning-color;
+        background: linear-gradient(135deg,
+                rgb(from variables.$warning-color r g b / 0.05) 0%,
+                variables.$background-color 100%);
+    }
+
+    &.error {
+        border-color: variables.$error-color;
+        background: linear-gradient(135deg,
+                rgb(from variables.$error-color r g b / 0.05) 0%,
+                variables.$background-color 100%);
+    }
+
+    &.total {
+        border-color: variables.$primary-color;
+        background: linear-gradient(135deg,
+                rgb(from variables.$primary-color r g b / 0.05) 0%,
+                variables.$background-color 100%);
+    }
+}
+
+.statHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.statTitle {
+    font-size: 14px;
+    font-weight: 500;
+    color: variables.$disabled-color;
+}
+
+.statIcon {
+    font-size: 20px;
+}
+
+.statValue {
+    font-size: 48px;
+    font-weight: bold;
+    color: variables.$text-color;
+    line-height: 1;
+}
+
+.graphSection {
+    background: variables.$background-color;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid variables.$disabled-color;
+    margin-bottom: 32px;
+}
+
+.graphContainer {
+    margin-top: 24px;
+    height: 400px;
+}
