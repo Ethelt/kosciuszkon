@@ -1,4 +1,3 @@
-import { DateTime } from "luxon";
 import { Task, TaskRepeating } from "../../../shared/src/types";
 import { DEFAULT_TASK_STATUS } from "../constants";
 import { dbGet, dbGetAll, dbRun } from "../db";
@@ -87,8 +86,8 @@ export async function addTask(task: TaskToAdd): Promise<Task> {
             task.action,
             task.description,
             task.priority,
-            dateISOToDb(task.range.start),
-            dateISOToDb(task.range.end),
+            dateISOToDb(task.range?.start),
+            dateISOToDb(task.range?.end),
             task.estimatedWorkingTime,
             task.estimatedWorkload,
             task.repeating?.frequency,
@@ -163,7 +162,7 @@ export async function updateTask(task: Task): Promise<Task> {
         ]
     );
 
-    return await getTask(task.id);
+    return getTask(task.id);
 }
 
 export async function removeTask(id: number): Promise<void> {

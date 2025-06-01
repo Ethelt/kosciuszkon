@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { StoreContext } from "@/store/StoreContext";
 
@@ -27,10 +27,13 @@ const getCurrentDateTime = (): string => {
 };
 
 export const AddTask: FC = observer(() => {
+  const location = useLocation();
+  const { taskId } = location.state;
   const store = useContext(StoreContext);
-  const { currentTask, setCurrentTask, addTask, editTask } =
-    store.TasksStateStore;
+  const { getTaskById, addTask, editTask } = store.TasksStateStore;
   const navigate = useNavigate();
+
+  const currentTask = getTaskById(taskId) || null;
 
   // Don't use useState for currentDateTime as we want it to refresh on each render
   // This ensures the minimum time is always "now" and not the time when the component mounted
@@ -82,15 +85,14 @@ export const AddTask: FC = observer(() => {
     }
   }, [currentTask]);
 
-  const validateDates = (
-    startDate: string,
-    endDate: string,
-    fieldName: "rangeStart" | "rangeEnd" | "startDate",
-  ): boolean => {
+  const validateDates = (startDate: string, endDate: string): boolean => {
     // Clear previous errors
     setDateError(null);
 
-    // Skip validation if either date is empty
+    // Skip validation if both dates are empty
+    if (!startDate && !endDate) return true;
+
+    // If only one date is provided, it's valid
     if (!startDate || !endDate) return true;
 
     const start = new Date(startDate);
@@ -140,9 +142,9 @@ export const AddTask: FC = observer(() => {
 
       // Validate dates when either start or end changes
       if (name === "rangeStart") {
-        validateDates(value, formData.rangeEnd, "rangeStart");
+        validateDates(value, formData.rangeEnd);
       } else {
-        validateDates(formData.rangeStart, value, "rangeEnd");
+        validateDates(formData.rangeStart, value);
       }
 
       setFormData(newData);
@@ -163,7 +165,7 @@ export const AddTask: FC = observer(() => {
         }
       }
 
-      validateDates(value, formData.rangeEnd, "startDate");
+      validateDates(value, formData.rangeEnd);
     }
 
     // Handle regular inputs
@@ -178,10 +180,8 @@ export const AddTask: FC = observer(() => {
     e.preventDefault();
 
     // Final validation before submission
-    if (formData.rangeStart && formData.rangeEnd) {
-      if (
-        !validateDates(formData.rangeStart, formData.rangeEnd, "rangeStart")
-      ) {
+    if (formData.rangeStart || formData.rangeEnd) {
+      if (!validateDates(formData.rangeStart, formData.rangeEnd)) {
         return; // Don't submit if dates are invalid
       }
     }
@@ -192,10 +192,13 @@ export const AddTask: FC = observer(() => {
       action: formData.action,
       description: formData.description,
       priority: formData.priority,
-      range: {
-        start: formData.rangeStart,
-        end: formData.rangeEnd,
-      },
+      range:
+        formData.rangeStart || formData.rangeEnd
+          ? {
+              start: formData.rangeStart || undefined,
+              end: formData.rangeEnd || undefined,
+            }
+          : undefined,
       estimatedWorkingTime: formData.estimatedWorkingTime
         ? parseInt(formData.estimatedWorkingTime)
         : undefined,
@@ -227,12 +230,10 @@ export const AddTask: FC = observer(() => {
     }
 
     // Reset form and navigate back
-    setCurrentTask(null);
     navigate("/tasks");
   };
 
   const handleCancel = () => {
-    setCurrentTask(null);
     navigate("/tasks");
   };
 
@@ -305,7 +306,7 @@ export const AddTask: FC = observer(() => {
 
           {/* Time Range */}
           <div className={styles.formSection}>
-            <h3>Execution Range</h3>
+            <h3>Execution Range (Optional)</h3>
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label htmlFor="rangeStart">Start Date</label>
@@ -316,8 +317,7 @@ export const AddTask: FC = observer(() => {
                   value={formData.rangeStart}
                   onChange={handleInputChange}
                   className={styles.addTaskFormInput}
-                  min={currentTask ? undefined : currentDateTime} // Refresh the min datetime on each render
-                  required
+                  min={currentTask ? undefined : currentDateTime}
                 />
               </div>
 
@@ -334,7 +334,6 @@ export const AddTask: FC = observer(() => {
                     formData.rangeStart ||
                     (currentTask ? undefined : currentDateTime)
                   }
-                  required
                 />
               </div>
             </div>

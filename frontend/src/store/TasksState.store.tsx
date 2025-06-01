@@ -8,7 +8,6 @@ import { RootStore } from "./Root.store";
 export class TasksStateStore {
   rootStore;
   taskList: ITask[] = [];
-  currentTask: ITask | null = null;
 
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
@@ -27,8 +26,8 @@ export class TasksStateStore {
     }
   };
 
-  setCurrentTask = (task: ITask | null) => {
-    this.currentTask = task;
+  getTaskById = (id: number) => {
+    return this.taskList.find(task => task.id === id);
   };
 
   addTask = (data: IFormTask) => {
