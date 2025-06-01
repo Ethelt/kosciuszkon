@@ -33,8 +33,8 @@ export function getTaskUsage(
 ): number {
   return (
     (maxComputingCenterPower *
-      (task.estimatedWorkload ?? 0.05) *
-      (task.estimatedWorkingTime ?? 60)) /
+      (task.estimatedWorkload ?? 0.10) *
+      (task.estimatedWorkingTime ?? 600)) /
     3600
   );
 }
