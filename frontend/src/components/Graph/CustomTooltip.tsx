@@ -45,7 +45,7 @@ export const CustomTooltip = ({
                 key={index}
                 className={styles.powerBalance}
                 style={{ color: entry.color }}>
-                <strong>Power Balance: {entry.value}</strong>
+                <strong>Net Energy Balance: {entry.value}</strong>
               </div>
             );
           }
