@@ -21,7 +21,11 @@ export const transformChartData = (
 
   // Initialize chart data with time and powerBalance
   const chartData = hours.map((hour, hourIndex) => {
-    const hourObj: any = {
+    const hourObj: {
+      time: string;
+      powerBalance: number;
+      [key: string]: string | number;
+    } = {
       time: hour.label || `Hour ${hourIndex}`,
       powerBalance: hour.balance || 0,
     };
