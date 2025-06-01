@@ -7,6 +7,9 @@ interface Task {
   description?: string;
   priority?: string | number;
   status?: string;
+  id?: string | number;
+  hourIndex?: number;
+  estimatedUsage?: number;
 }
 
 interface PayloadEntry {
@@ -47,9 +50,20 @@ export const CustomTooltip = ({
             );
           }
 
-          // Find the task details for this entry
-          const taskName = entry.dataKey;
-          const task = data.tasks.find((t: Task) => t.name === taskName);
+          // Parse the unique key to get task info
+          const [name, hourIndex, taskId] = entry.dataKey.split("|");
+
+          // Find the matching task
+          const task = data.tasks.find(t => {
+            if (taskId && t.id) {
+              // If we have IDs, use them for exact matching
+              return (
+                t.id.toString() === taskId && t.hourIndex === Number(hourIndex)
+              );
+            }
+            // Fallback to name and hour matching
+            return t.name === name && t.hourIndex === Number(hourIndex);
+          });
 
           if (task && entry.value > 0) {
             return (
@@ -58,9 +72,11 @@ export const CustomTooltip = ({
                 className={styles.taskEntry}
                 style={{ borderLeftColor: entry.color }}>
                 <div className={styles.taskName} style={{ color: entry.color }}>
-                  {taskName}
+                  {task.name}
                 </div>
-                <div className={styles.powerValue}>Power: {entry.value}</div>
+                <div className={styles.powerValue}>
+                  Power: {entry.value} kWh
+                </div>
                 {task.action && (
                   <div className={styles.taskDetail}>Action: {task.action}</div>
                 )}

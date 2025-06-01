@@ -2,51 +2,53 @@ export const transformChartData = (
   data: IDashboardChartData | null | undefined,
 ) => {
   // Provide default structure if data is missing
-  const safeData = {
-    hours: data?.hours || [],
-    tasks: data?.tasks || [],
-  };
-
-  console.log("transform", data);
-
-  const { hours, tasks } = safeData;
-
-  console.log("Hours:", hours);
-  console.log("Tasks:", tasks);
-
-  // Early return if no hours data
-  if (hours.length === 0) {
-    return [];
+  if (!data || !data.hours || !data.tasks) {
+    console.warn("Missing or invalid chart data");
+    return { chartData: [], uniqueTaskKeys: [] };
   }
 
-  // Group tasks by hourIndex (safe even with empty tasks array)
-  const taskGroups = tasks.reduce<Record<number, IChartTask[]>>((acc, task) => {
-    if (task?.hourIndex !== undefined) {
-      acc[task.hourIndex] = acc[task.hourIndex] || [];
-      acc[task.hourIndex].push(task);
-    }
-    return acc;
-  }, {});
+  const { hours, tasks } = data;
 
-  // Generate combined chart data
-  const chartData = hours.map((hour, index) => {
-    const hourTasks = taskGroups[index] || [];
-    const taskUsages = hourTasks.reduce(
-      (acc, task) => {
-        if (task?.name && task?.estimatedUsage !== undefined) {
-          acc[task.name] = task.estimatedUsage;
-        }
-        return acc;
-      },
-      {} as Record<string, number>,
-    );
+  // Early return if no hours data
+  if (!Array.isArray(hours) || hours.length === 0) {
+    console.warn("No hours data available");
+    return { chartData: [], uniqueTaskKeys: [] };
+  }
 
-    return {
-      time: hour?.label || `Hour ${index}`,
-      powerBalance: hour?.balance || 0,
-      ...taskUsages,
+  // Create unique task keys for each task instance
+  // Format: taskName|hourIndex|taskId
+  const uniqueTaskKeys = new Set<string>();
+
+  // Initialize chart data with time and powerBalance
+  const chartData = hours.map((hour, hourIndex) => {
+    const hourObj: any = {
+      time: hour.label || `Hour ${hourIndex}`,
+      powerBalance: hour.balance || 0,
     };
+
+    // Find tasks for this hour
+    const hourTasks = tasks.filter(task => task.hourIndex === hourIndex);
+
+    // Add each task to the hour data with a unique key
+    hourTasks.forEach((task, taskIndex) => {
+      // Create a unique key that includes the hour
+      const uniqueKey = `${task.name}|${hourIndex}|${task.id || taskIndex}`;
+      uniqueTaskKeys.add(uniqueKey);
+
+      // Add this task's power usage to the hour data
+      hourObj[uniqueKey] = task.estimatedUsage || 0;
+    });
+
+    return hourObj;
   });
 
-  return chartData;
+  console.log("Transformed chart data:", chartData);
+
+  // Convert set to array for the component
+  const uniqueTaskKeysArray = Array.from(uniqueTaskKeys);
+
+  return {
+    chartData,
+    uniqueTaskKeys: uniqueTaskKeysArray,
+  };
 };

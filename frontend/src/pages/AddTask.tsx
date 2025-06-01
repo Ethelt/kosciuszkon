@@ -6,6 +6,20 @@ import { StoreContext } from "@/store/StoreContext";
 
 import styles from "@/styles/pages/AddTask.module.scss";
 
+// Helper function to format dates for datetime-local input
+const formatDateForInput = (dateString?: string): string => {
+  if (!dateString) return "";
+
+  // Try to create a valid date object
+  const date = new Date(dateString);
+
+  // Check if date is valid
+  if (isNaN(date.getTime())) return "";
+
+  // Format to YYYY-MM-DDThh:mm format required by datetime-local input
+  return date.toISOString().slice(0, 16);
+};
+
 export const AddTask: FC = observer(() => {
   const store = useContext(StoreContext);
   const { currentTask, setCurrentTask, addTask } = store.TasksStateStore;
@@ -16,8 +30,8 @@ export const AddTask: FC = observer(() => {
     action: "",
     description: "",
     priority: "medium" as ITaskPriorities,
-    rangeStart: undefined as string | undefined,
-    rangeEnd: undefined as string | undefined,
+    rangeStart: "",
+    rangeEnd: "",
     estimatedWorkingTime: "",
     estimatedWorkload: "",
     repeating: false,
@@ -31,23 +45,25 @@ export const AddTask: FC = observer(() => {
     if (!currentTask) navigate("/tasks/add");
 
     if (currentTask) {
+      console.log("Loading task for edit:", currentTask);
       setFormData({
         name: currentTask.name || "",
         action: currentTask.action || "",
         description: currentTask.description || "",
         priority: currentTask.priority || "medium",
-        rangeStart: currentTask.range?.start || undefined,
-        rangeEnd: currentTask.range?.end || undefined,
+        // Format dates correctly for datetime-local inputs
+        rangeStart: formatDateForInput(currentTask.range?.start),
+        rangeEnd: formatDateForInput(currentTask.range?.end),
         estimatedWorkingTime:
           currentTask.estimatedWorkingTime?.toString() || "",
         estimatedWorkload: currentTask.estimatedWorkload?.toString() || "",
         repeating: !!currentTask.repeating,
         frequency: currentTask.repeating?.frequency || "daily",
         interval: currentTask.repeating?.interval || 1,
-        startDate: currentTask.repeating?.startDate || "",
+        startDate: formatDateForInput(currentTask.repeating?.startDate),
       });
     }
-  }, [currentTask]);
+  }, [currentTask, navigate]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -96,6 +112,10 @@ export const AddTask: FC = observer(() => {
     } else {
       addTask(taskData as IFormTask);
     }
+
+    // Reset form and navigate back
+    setCurrentTask(null);
+    navigate("/tasks");
   };
 
   const handleCancel = () => {

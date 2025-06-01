@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { observer } from "mobx-react";
 import {
   Bar,
@@ -33,7 +33,6 @@ const taskColors = [
 export const Graph: FC<{ data: IDashboardChartData | null | undefined }> =
   observer(({ data }) => {
     // Handle loading/null state
-    console.log("data-Graph:", data);
     if (!data) {
       return (
         <div
@@ -49,14 +48,15 @@ export const Graph: FC<{ data: IDashboardChartData | null | undefined }> =
       );
     }
 
-    console.log(data);
-    const chartData = transformChartData(data);
+    // Transform data with unique task identifiers
+    const { chartData, uniqueTaskKeys } = useMemo(() => {
+      const result = transformChartData(data);
+      return result;
+    }, [data]);
 
-    // Safe extraction of task names with null checks
-    const taskNames =
-      data.tasks && Array.isArray(data.tasks)
-        ? [...new Set(data.tasks.map(t => t.name).filter(Boolean))]
-        : [];
+    // Debug output
+    console.log("Transformed chart data:", chartData);
+    console.log("Unique task keys:", uniqueTaskKeys);
 
     // Handle empty data case
     if (chartData.length === 0) {
@@ -92,14 +92,14 @@ export const Graph: FC<{ data: IDashboardChartData | null | undefined }> =
           />
           <Legend />
 
-          {/* Dynamically render stacked bars for tasks */}
-          {taskNames.map((name, idx) => (
+          {/* Render each unique task-hour combination as a bar */}
+          {uniqueTaskKeys.map((key, idx) => (
             <Bar
-              key={idx}
-              dataKey={name}
+              key={key}
+              dataKey={key}
               stackId="tasks"
               fill={taskColors[idx % taskColors.length]}
-              name={name}
+              name={key.split("|")[0]} // Display only task name in legend
             />
           ))}
 
