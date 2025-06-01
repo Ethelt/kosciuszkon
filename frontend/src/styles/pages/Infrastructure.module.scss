@@ -1,6 +1,64 @@
-.form {
+@use "@styles/_variables";
+.infrastructure {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
   padding: 20px;
+
+  &Label {
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    gap: 10px;
+    width: 30%;
+    min-width: 250px;
+    box-sizing: border-box;
+    height: 130px;
+  }
+  &Input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 3px solid variables.$disabled-color;
+    border-radius: 4px;
+    &:focus {
+      border-color: variables.$primary-color;
+      outline: none;
+    }
+  }
+
+  &Button {
+    background-color: variables.$primary-color;
+    border: none;
+    border-radius: 6px;
+    color: variables.$background-color;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: variables.$secondary-color;
+    }
+
+    &Container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  }
 }

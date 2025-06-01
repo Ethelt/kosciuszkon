@@ -1,0 +1,31 @@
+@use "@styles/_variables";
+
+.button {
+  background-color: variables.$primary-color;
+  border-radius: 6px;
+  color: variables.$background-color;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  text-decoration: none;
+  &:hover {
+    background-color: variables.$secondary-color;
+  }
+  &Container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 50px;
+  }
+
+  &Text {
+    white-space: nowrap;
+  }
+}

@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { toast } from "react-toastify";
 
 import client from "@/api/client";
 
@@ -13,17 +14,31 @@ export class InfrastructureStateStore {
     this.rootStore = rootStore;
   }
 
-  // get data for form default values (request to server)
+  setFormData = (data: IFormSystemConfig) => {
+    this.formData = data;
+    this.sendData(data);
+  };
+
   fetchData = async () => {
     try {
       const response = await client.get<IFormSystemConfig>("/config");
-      console.log(response.data);
       this.formData = response.data;
     } catch (error) {
       console.error("Failed to fetch infrastructure data:", error);
     }
   };
 
-  //create method that sets data from form to store and call other one that fetch to server with form data
-  sendData = () => {};
+  sendData = (data: IFormSystemConfig) => {
+    client
+      .post<IConfigPostReturnType, IFormSystemConfig>("/config", data)
+      .then(response => {
+        console.log("Data sent successfully:", response.data);
+        toast.success("Data saved successfully!", {
+          autoClose: 3000,
+        });
+      })
+      .catch(error => {
+        console.error("Failed to send data:", error);
+      });
+  };
 }

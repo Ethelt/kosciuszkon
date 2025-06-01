@@ -22,9 +22,7 @@ export const Header: FC = observer(() => {
         <h1 className={styles.headerTitle}>{currentPage.title}</h1>
         <p className={styles.headerDescription}>{currentPage.description}</p>
       </div>
-      {currentPage.content && (
-        <div className={styles.headerCustomContent}>{currentPage.content}</div>
-      )}
+      {currentPage.content && <currentPage.content />}
     </header>
   );
 });

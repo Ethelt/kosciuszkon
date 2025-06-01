@@ -11,3 +11,8 @@ interface IFormSystemConfig {
   averageHourlyConsumption: number; // średnie stałe zużycie energi na godzinę
   maxComputingCenterPower: number; // maksymalna moc centrum obliczeniowego (max kW urządzenia)
 }
+
+interface IConfigPostReturnType {
+  success: true;
+  data: IFormSystemConfig;
+}

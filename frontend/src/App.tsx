@@ -5,10 +5,12 @@ import { Bounce, ToastContainer } from "react-toastify";
 
 import { PWAToasts } from "@/components";
 import {
+  AddTaskPage,
   DashboardPage,
   InfrastructurePage,
   NavigationWrapper,
   NotFoundPage,
+  TasksPage,
 } from "@/pages";
 
 import { StoreContext } from "./store/StoreContext";
@@ -27,6 +29,8 @@ const App: FC = observer(() => {
         <Route path="/" element={<NavigationWrapper />}>
           <Route index element={<DashboardPage />} />
           <Route path="infrastructure" element={<InfrastructurePage />} />
+          <Route path="tasks" element={<TasksPage />} />
+          <Route path="tasks/add" element={<AddTaskPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -1,5 +1,7 @@
 import { makeAutoObservable } from "mobx";
 
+import { AddTaskButton } from "@/components";
+
 import { RootStore } from "./Root.store";
 
 const headerContent: Record<string, IHeaderData> = {
@@ -14,6 +16,11 @@ const headerContent: Record<string, IHeaderData> = {
     content: null,
   },
   "/tasks": {
+    title: "Tasks",
+    description: "Manage processing center cron jobs and scheduled tasks",
+    content: AddTaskButton,
+  },
+  "/tasks/add": {
     title: "Tasks",
     description: "Manage processing center cron jobs and scheduled tasks",
     content: null,

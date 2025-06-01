@@ -7,79 +7,122 @@ import styles from "@/styles/pages/Infrastructure.module.scss";
 
 export const Infrastructure: FC = observer(() => {
   const store = useContext(StoreContext);
-  const { fetchData } = store.InfrastructureStateStore;
+  const { fetchData, formData, setFormData } = store.InfrastructureStateStore;
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formDataObject = new FormData(e.currentTarget);
+    const data: IFormSystemConfig = {
+      maxInstallationPower:
+        Number(formDataObject.get("maxInstallationPower")) || 0,
+      systemLosses: Number(formDataObject.get("systemLosses")) || 0,
+      installationTilt: Number(formDataObject.get("installationTilt")) || 0,
+      maxBatteryCapacity: Number(formDataObject.get("maxBatteryCapacity")) || 0,
+      panelHeight: Number(formDataObject.get("panelHeight")) || 0,
+      averageHourlyConsumption:
+        Number(formDataObject.get("averageHourlyConsumption")) || 0,
+      maxComputingCenterPower:
+        Number(formDataObject.get("maxComputingCenterPower")) || 0,
+      coordinates: {
+        latitude: formData.coordinates?.latitude || 50.0647,
+        longitude: formData.coordinates?.longitude || 19.945,
+      },
+    };
+
+    setFormData(data);
+  };
+
   return (
     <div className={styles.infrastructure}>
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <label className={styles.formLabel}>
-          Maksymalna moc instalacji (kWp):
+          Maximum Installation Power (kWp):
           <input
             className={styles.formInput}
             type="number"
             name="maxInstallationPower"
             step="any"
+            min={0}
+            defaultValue={formData.maxInstallationPower || ""}
           />
         </label>
         <label className={styles.formLabel}>
-          Straty systemowe (%):
+          System Losses (%):
           <input
             className={styles.formInput}
             type="number"
             name="systemLosses"
             step="any"
+            min={0}
+            defaultValue={formData.systemLosses || ""}
           />
         </label>
         <label className={styles.formLabel}>
-          Nachylenie instalacji (stopnie):
+          Installation Tilt (degrees):
           <input
             className={styles.formInput}
             type="number"
             name="installationTilt"
             step="any"
+            defaultValue={formData.installationTilt || ""}
+            min={0}
+            max={90}
           />
         </label>
         <label className={styles.formLabel}>
-          Maksymalna pojemność banku energii (kWh):
+          Maximum Battery Capacity (kWh):
           <input
             className={styles.formInput}
             type="number"
             name="maxBatteryCapacity"
             step="any"
+            min={0}
+            defaultValue={formData.maxBatteryCapacity || ""}
           />
         </label>
         <label className={styles.formLabel}>
-          Wysokość montażu paneli (m):
+          Panel Height (m):
           <input
             className={styles.formInput}
             type="number"
             name="panelHeight"
             step="any"
+            min={0}
+            defaultValue={formData.panelHeight || ""}
           />
         </label>
         <label className={styles.formLabel}>
-          Średnie stałe zużycie energii na godzinę:
+          Average Hourly Consumption (kWh):
           <input
             className={styles.formInput}
             type="number"
             name="averageHourlyConsumption"
             step="any"
+            min={0}
+            defaultValue={formData.averageHourlyConsumption || ""}
           />
         </label>
         <label className={styles.formLabel}>
-          Maksymalna moc centrum obliczeniowego (kW):
+          Maximum Computing Center Power (kW):
           <input
             className={styles.formInput}
             type="number"
             name="maxComputingCenterPower"
             step="any"
+            min={0}
+            defaultValue={formData.maxComputingCenterPower || ""}
           />
         </label>
-        <button className={styles.formButton} type="submit">
-          Zapisz
-        </button>
+        <div className={styles.formButtonContainer}>
+          <button className={styles.formButton} type="submit">
+            Save Configuration
+          </button>
+        </div>
       </form>
     </div>
   );
