@@ -6,6 +6,7 @@ import { Bounce, ToastContainer } from "react-toastify";
 import { PWAToasts } from "@/components";
 import {
   AddTaskPage,
+  AnalyticsPage,
   DashboardPage,
   InfrastructurePage,
   NavigationWrapper,
@@ -30,7 +31,9 @@ const App: FC = observer(() => {
           <Route index element={<DashboardPage />} />
           <Route path="infrastructure" element={<InfrastructurePage />} />
           <Route path="tasks" element={<TasksPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="tasks/add" element={<AddTaskPage />} />
+          <Route path="tasks/edit" element={<AddTaskPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

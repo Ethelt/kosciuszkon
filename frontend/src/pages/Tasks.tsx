@@ -1,13 +1,16 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
+import { useNavigate } from "react-router-dom";
 
 import { StoreContext } from "@/store/StoreContext";
 
 import styles from "@/styles/pages/Tasks.module.scss";
 
 export const Tasks: FC = observer(() => {
+  const navigate = useNavigate();
   const store = useContext(StoreContext);
-  const { fetchTasks, taskList } = store.TasksStateStore;
+  const { fetchTasks, taskList, setCurrentTask, deleteTask } =
+    store.TasksStateStore;
   const [activeFilter, setActiveFilter] = useState<ITaskStatuses | "all">(
     "all",
   );
@@ -117,10 +120,27 @@ export const Tasks: FC = observer(() => {
                   </span>
                 </div>
                 <div className={styles.taskActions}>
-                  <button className={styles.actionButton} title="Edit">
+                  <button
+                    className={styles.actionButton}
+                    title="Edit"
+                    onClick={() => {
+                      setCurrentTask(task);
+                      navigate("/tasks/edit");
+                    }}>
                     ✏️
                   </button>
-                  <button className={styles.actionButton} title="Delete">
+                  <button
+                    className={styles.actionButton}
+                    title="Delete"
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Are you sure you want to delete this task?",
+                        )
+                      ) {
+                        deleteTask(task.id);
+                      }
+                    }}>
                     🗑️
                   </button>
                 </div>
