@@ -24,13 +24,16 @@ const getCurrentDateTime = (): string => {
 };
 
 export const AddTask: FC = observer(() => {
-  const location = useLocation();
-  const { taskId } = location.state;
   const store = useContext(StoreContext);
   const { getTaskById, addTask, editTask } = store.TasksStateStore;
   const navigate = useNavigate();
+  const location = useLocation();
+  const { taskId } = location.state;
 
-  const currentTask = getTaskById(taskId) || null;
+  console.log(location, location.state, taskId);
+
+  const currentTask =
+    location.state && location.state.taskId ? getTaskById(taskId) : null;
 
   // Don't use useState for currentDateTime as we want it to refresh on each render
   // This ensures the minimum time is always "now" and not the time when the component mounted
@@ -61,6 +64,8 @@ export const AddTask: FC = observer(() => {
       const repeatStartDate = formatDateForInput(
         currentTask.repeating?.startDate,
       );
+
+      console.log(currentTask);
 
       setFormData({
         name: currentTask.name || "",
