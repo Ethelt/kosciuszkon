@@ -1,5 +1,5 @@
 import { maxBy } from "lodash";
-import { BalanceEstimator } from "../balanceEstimator";
+import { getBalanceEstimator } from "../balanceEstimator";
 import { DateTime } from "luxon";
 import { Task } from "@arabska/shared/src/types";
 import { getConfig } from "../config/model";
@@ -7,7 +7,7 @@ import { dateToSlotsNumber, getTaskUsage } from "../utils";
 import { getAllWaitingTasks, updateTask } from "../tasks/model";
 
 export class Scheduler {
-  constructor(private readonly balanceEstimator: BalanceEstimator) {}
+  constructor() {}
 
   async scheduleAllTasks(): Promise<Task[]> {
     const tasks = await this.loadTasks();
@@ -29,7 +29,7 @@ export class Scheduler {
       zone: "utc",
     });
 
-    const { start, balances } = this.balanceEstimator.getBalances(
+    const { start, balances } = (await getBalanceEstimator()).getBalances(
       startDate,
       maxDeadlineDate
     );
@@ -84,26 +84,26 @@ export class Scheduler {
         // );
       } else {
         console.log("No spot found for task", task);
-			// Backup: find spot with highest available freeDuration
-			const backupSpot = maxBy(applicableSpots, (spot) => spot.freeDuration);
-			
-			if (backupSpot) {
-				const index = balances.indexOf(backupSpot);
-				task.plannedExecutionTime =
-					start
-						.plus({
-							hours: index,
-						})
-						.toISO() ?? undefined;
+        // Backup: find spot with highest available freeDuration
+        const backupSpot = maxBy(applicableSpots, (spot) => spot.freeDuration);
 
-				const usage = getTaskUsage(task, config.maxComputingCenterPower ?? 2);
+        if (backupSpot) {
+          const index = balances.indexOf(backupSpot);
+          task.plannedExecutionTime =
+            start
+              .plus({
+                hours: index,
+              })
+              .toISO() ?? undefined;
 
-				backupSpot.balance -= usage;
-				backupSpot.freeDuration -= task.estimatedWorkingTime ?? 3600;
+          const usage = getTaskUsage(task, config.maxComputingCenterPower ?? 2);
 
-				console.log("Backup spot found for task", task);
-			}
-			}
+          backupSpot.balance -= usage;
+          backupSpot.freeDuration -= task.estimatedWorkingTime ?? 3600;
+
+          console.log("Backup spot found for task", task);
+        }
+      }
     });
 
     const queue = prioritySortedTasks.toSorted((a, b) => {

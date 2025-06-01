@@ -3,7 +3,7 @@ import { getConfig } from "../config/model";
 import { getWeather } from "./weatherEffectiveness";
 import { getAverageEffectiveness } from "./averageEffectiveness";
 
-export class BalanceEstimator {
+class BalanceEstimator {
   private balances: Map<string, number>;
   private dailyAveragesPerMonth: number[] = [];
 
@@ -16,7 +16,7 @@ export class BalanceEstimator {
     this.dailyAveragesPerMonth = await getAverageEffectiveness(config);
   }
 
-  async calculateBalancesForNextWeek() {
+  async getBalancesForNextWeek() {
     const config = await getConfig();
     const weather = await getWeather(
       config.coordinates.latitude,
@@ -100,4 +100,15 @@ export class BalanceEstimator {
 
     return this.dailyAveragesPerMonth[date.month - 1] * hourlyEffectiveness;
   }
+}
+
+let balanceEstimator: BalanceEstimator;
+
+export async function getBalanceEstimator(): Promise<BalanceEstimator> {
+  if (!balanceEstimator) {
+    balanceEstimator = new BalanceEstimator();
+    await balanceEstimator.getDefaultAverages();
+    await balanceEstimator.getBalancesForNextWeek();
+  }
+  return balanceEstimator;
 }
