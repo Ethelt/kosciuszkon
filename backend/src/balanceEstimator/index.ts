@@ -23,27 +23,26 @@ class BalanceEstimator {
       config.coordinates.longitude
     );
     weather.forEach((hour) => {
-      this.balances.set(
-        hour.date,
-        config.maxInstallationPower * hour.effectiveness
-      );
+      const energyIncome = config.maxInstallationPower * hour.effectiveness;
+      const energyCost = this.getEnergyCost(hour.date);
+      this.balances.set(hour.date, energyIncome - energyCost);
     });
   }
 
-  getBalances(
+  async getBalances(
     from: DateTime,
     to: DateTime
-  ): {
+  ): Promise<{
     start: DateTime;
     balances: { balance: number; freeDuration: number; time: DateTime }[];
-  } {
+  }> {
     const balances = [];
     let currentDateTime = from;
 
     while (currentDateTime < to) {
       balances.push({
         time: currentDateTime,
-        balance: this.getBalance(currentDateTime),
+        balance: await this.getBalance(currentDateTime),
         freeDuration: 60 * 60,
       });
       currentDateTime = currentDateTime.plus({ hours: 1 });
@@ -52,13 +51,14 @@ class BalanceEstimator {
     return { start: from, balances };
   }
 
-  private getBalance(date: DateTime): number {
+  private async getBalance(date: DateTime): Promise<number> {
     const key = date.setZone("UTC").toISO()!;
     if (this.balances.has(key)) {
       return this.balances.get(key) || 0;
     }
 
-    const balance = this.getDefaultBalance(date);
+    const balance =
+      this.getDefaultBalance(date) - this.getEnergyCost(date.toISO()!);
     this.balances.set(key, balance);
     return balance;
   }
@@ -98,7 +98,15 @@ class BalanceEstimator {
       hourlyEffectiveness = Math.sin(sinePosition);
     }
 
-    return this.dailyAveragesPerMonth[date.month - 1] * hourlyEffectiveness;
+    const energyIncome =
+      this.dailyAveragesPerMonth[date.month - 1] * hourlyEffectiveness;
+    const energyCost = this.getEnergyCost(date.toISO()!);
+    return energyIncome - energyCost;
+  }
+
+  private getEnergyCost(date: string): number {
+    const energyCost = 1;
+    return energyCost;
   }
 }
 
