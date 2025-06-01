@@ -22,11 +22,13 @@ class BalanceEstimator {
       config.coordinates.latitude,
       config.coordinates.longitude
     );
-    weather.forEach((hour) => {
-      const energyIncome = config.maxInstallationPower * hour.effectiveness;
-      const energyCost = this.getEnergyCost(hour.date);
-      this.balances.set(hour.date, energyIncome - energyCost);
-    });
+    await Promise.all(
+      weather.map(async (hour) => {
+        const energyIncome = config.maxInstallationPower * hour.effectiveness;
+        const energyCost = await this.getEnergyCost(hour.date);
+        this.balances.set(hour.date, energyIncome - energyCost);
+      })
+    );
   }
 
   async getBalances(
@@ -57,12 +59,12 @@ class BalanceEstimator {
       return this.balances.get(key) || 0;
     }
 
-    const balance = this.getDefaultBalance(date);
+    const balance = await this.getDefaultBalance(date);
     this.balances.set(key, balance);
     return balance;
   }
 
-  private getDefaultBalance(date: DateTime): number {
+  private async getDefaultBalance(date: DateTime): Promise<number> {
     const hour = date.hour;
     // Calculate solar panel effectiveness based on hour of the day and seasonal daylight hours in Poland
     // Peak effectiveness is around solar noon, with gradual decline towards sunrise/sunset
@@ -99,13 +101,34 @@ class BalanceEstimator {
 
     const energyIncome =
       this.dailyAveragesPerMonth[date.month - 1] * hourlyEffectiveness;
-    const energyCost = this.getEnergyCost(date.toISO()!);
+    const energyCost = await this.getEnergyCost(date.toISO()!);
     return energyIncome - energyCost;
   }
 
-  private getEnergyCost(date: string): number {
-    const energyCost = 1;
-    return energyCost;
+  private async getEnergyCost(date: string): Promise<number> {
+    const config = await getConfig();
+    const baseConsumption = config.averageHourlyConsumption;
+    
+    const dateTime = DateTime.fromISO(date);
+    const hour = dateTime.hour;
+    
+    // Data center energy usage pattern - higher during business hours, lower at night
+    // Peak usage during business hours (9-17), moderate in evening (18-22), lowest at night (23-8)
+    let hourlyMultiplier = 1.0;
+    
+    if (hour >= 9 && hour <= 17) {
+      // Business hours - peak usage (110-130% of base)
+      hourlyMultiplier = 1.1 + 0.2 * Math.sin(((hour - 9) / 8) * Math.PI);
+    } else if (hour >= 18 && hour <= 22) {
+      // Evening hours - moderate usage (90-110% of base)
+      hourlyMultiplier = 0.9 + 0.2 * Math.sin(((hour - 18) / 4) * Math.PI);
+    } else {
+      // Night hours (23-8) - lowest usage (70-90% of base)
+      const nightHour = hour >= 23 ? hour - 23 : hour + 1; // Normalize to 0-9 range
+      hourlyMultiplier = 0.7 + 0.2 * Math.sin((nightHour / 9) * Math.PI);
+    }
+    
+    return baseConsumption * hourlyMultiplier;
   }
 }
 
