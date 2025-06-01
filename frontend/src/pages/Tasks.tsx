@@ -174,13 +174,19 @@ export const Tasks: FC = observer(() => {
                   <div className={styles.sectionContent}>
                     <span className={styles.sectionLabel}>Execution</span>
                     <div className={styles.executionTimes}>
-                      <div>
-                        {`Deadline: ${formatDateTime(task.range.end || "Not found")}`}
-                      </div>
-                      <div>
+                      <div className={styles.planned}>
                         {`Planned: ${formatDateTime(
                           task.plannedExecutionTime || "Not found",
                         )}`}
+                      </div>
+                      <div>
+                        {task.range.start && task.range.end
+                          ? `Allowed between: ${formatDateTime(task.range.start)} - ${formatDateTime(task.range.end)}`
+                          : task.range.start
+                            ? `Allowed after: ${formatDateTime(task.range.start)}`
+                            : task.range.end
+                              ? `Allowed before: ${formatDateTime(task.range.end)}`
+                              : "Range: Not set"}
                       </div>
                     </div>
                   </div>

@@ -222,6 +222,10 @@
   }
 }
 
+.planned {
+  color: variables.$text-color;
+}
+
 // Responsive design
 @media (max-width: 600px) {
   .tasks {

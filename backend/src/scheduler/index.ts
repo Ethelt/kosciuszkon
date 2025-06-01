@@ -82,7 +82,28 @@ export class Scheduler {
         //   usage,
         //   task.estimatedWorkingTime ?? 3600
         // );
-      }
+      } else {
+        console.log("No spot found for task", task);
+			// Backup: find spot with highest available freeDuration
+			const backupSpot = maxBy(applicableSpots, (spot) => spot.freeDuration);
+			
+			if (backupSpot) {
+				const index = balances.indexOf(backupSpot);
+				task.plannedExecutionTime =
+					start
+						.plus({
+							hours: index,
+						})
+						.toISO() ?? undefined;
+
+				const usage = getTaskUsage(task, config.maxComputingCenterPower ?? 2);
+
+				backupSpot.balance -= usage;
+				backupSpot.freeDuration -= task.estimatedWorkingTime ?? 3600;
+
+				console.log("Backup spot found for task", task);
+			}
+			}
     });
 
     const queue = prioritySortedTasks.toSorted((a, b) => {
@@ -105,40 +126,6 @@ export class Scheduler {
 
   private async loadTasks(): Promise<Task[]> {
     return await getAllWaitingTasks();
-    // return [
-    //   {
-    //     priority: "low",
-    //     range: {
-    //       start: "2025-06-01T16:00:00.000Z",
-    //       end: "2025-06-01T20:00:00.000Z",
-    //     },
-    //     action: "test",
-    //     id: 1,
-    //     name: "Test Task",
-    //     description: "Test task description",
-    //     status: "waiting",
-    //     estimatedWorkingTime: 2500,
-    //     estimatedWorkload: 50,
-    //     createdAt: new Date().toISOString(),
-    //     updatedAt: new Date().toISOString(),
-    //   },
-    //   {
-    //     priority: "critical",
-    //     range: {
-    //       start: "2025-06-01T12:00:00.000Z",
-    //       end: "2025-06-02T00:00:00.000Z",
-    //     },
-    //     action: "test",
-    //     id: 1,
-    //     name: "Test Task",
-    //     description: "Test task description",
-    //     status: "waiting",
-    //     estimatedWorkingTime: 100,
-    //     estimatedWorkload: 50,
-    //     createdAt: new Date().toISOString(),
-    //     updatedAt: new Date().toISOString(),
-    //   },
-    // ];
   }
 }
 
