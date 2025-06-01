@@ -44,7 +44,6 @@ export class AppStateStore {
   }
 
   setCurrentPage = (page: keyof typeof headerContent) => {
-    console.log(headerContent[page]);
     this.currentPage = headerContent[page];
   };
 

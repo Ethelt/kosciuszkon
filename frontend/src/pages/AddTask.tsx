@@ -31,8 +31,6 @@ export const AddTask: FC = observer(() => {
 
   const taskId = location.state?.taskId || null;
 
-  console.log(location, location.state, taskId);
-
   const currentTask =
     location.state && location.state.taskId ? getTaskById(taskId) : null;
 
@@ -65,8 +63,6 @@ export const AddTask: FC = observer(() => {
       const repeatStartDate = formatDateForInput(
         currentTask.repeating?.startDate,
       );
-
-      console.log(currentTask);
 
       setFormData({
         name: currentTask.name || "",
@@ -182,9 +178,9 @@ export const AddTask: FC = observer(() => {
       range:
         formData.rangeStart || formData.rangeEnd
           ? {
-              start: formData.rangeStart || undefined,
-              end: formData.rangeEnd || undefined,
-            }
+            start: formData.rangeStart || undefined,
+            end: formData.rangeEnd || undefined,
+          }
           : undefined,
       estimatedWorkingTime: formData.estimatedWorkingTime
         ? parseInt(formData.estimatedWorkingTime)
@@ -194,10 +190,10 @@ export const AddTask: FC = observer(() => {
         : undefined,
       repeating: formData.repeating
         ? {
-            frequency: formData.frequency,
-            interval: formData.interval,
-            startDate: formData.startDate,
-          }
+          frequency: formData.frequency,
+          interval: formData.interval,
+          startDate: formData.startDate,
+        }
         : undefined,
     };
 
