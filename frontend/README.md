@@ -1,4 +1,4 @@
-# GreenJob
+# GreenJob - Frontend
 
 <a id="readme-top"></a>
 
@@ -16,7 +16,7 @@
           <li><a href="#ubuntudebian">Ubuntu/Debian</a></li>
         </ul>
         </li>
-        <li><a href="#set-up-env-file">Set up◊ .env file</a></li>
+        <li><a href="#set-up-env-file">Set up .env file</a></li>
       </ul>
     </li>
     <li>
@@ -106,11 +106,11 @@ mkdir -p ./src/certs/ && mv localhost.pem localhost-key.pem ./src/certs/
 Create a `.env` file in the src directory of the project and add the following variables:
 
 ```env
-SW=true           #is the service worker enabled
-SW_DEV=true       #is the service worker in development mode
-SW_DESTROY=true   #should the service worker be destroyed on reload
-SOURCE_MAP=false  #should the source map be generated
-VITE_API_URL= <enter your API URL here>
+SW=true                                  #is the service worker enabled
+SW_DEV=true                              #is the service worker in development mode
+SW_DESTROY=true                          #should the service worker be destroyed on reload
+SOURCE_MAP=false                         #should the source map be generated
+VITE_API_URL= <enter your API URL here>  #use http://localhost:3000 if you want to use the local backend server
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -137,7 +137,7 @@ VITE_API_URL= <enter your API URL here>
 
 The app will be available at port 5173: [https://localhost:5173](https://localhost:5173)
 
-> [!WARNING] 
+> [!WARNING]
 > **For PWA to work properly you need to run built version of the app. At this time the Firefox and Safari browsers do not support PWA on desktop [read more here](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable#browser_support)**
 
 -For testing PWA functions, run the following command:
