@@ -20,10 +20,21 @@ const formatDateForInput = (dateString?: string): string => {
   return date.toISOString().slice(0, 16);
 };
 
+// Updated getCurrentDateTime function to refresh each time it's called
+const getCurrentDateTime = (): string => {
+  const now = new Date();
+  return now.toISOString().slice(0, 16);
+};
+
 export const AddTask: FC = observer(() => {
   const store = useContext(StoreContext);
   const { currentTask, setCurrentTask, addTask } = store.TasksStateStore;
   const navigate = useNavigate();
+
+  // Don't use useState for currentDateTime as we want it to refresh on each render
+  // This ensures the minimum time is always "now" and not the time when the component mounted
+  const currentDateTime = getCurrentDateTime();
+  const [dateError, setDateError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -42,28 +53,63 @@ export const AddTask: FC = observer(() => {
 
   // Fill form with currentTask data if editing
   useEffect(() => {
-    if (!currentTask) navigate("/tasks/add");
-
     if (currentTask) {
       console.log("Loading task for edit:", currentTask);
+
+      // For editing tasks, we'll allow past dates if they're already set
+      const rangeStart = formatDateForInput(currentTask.range?.start);
+      const rangeEnd = formatDateForInput(currentTask.range?.end);
+      const repeatStartDate = formatDateForInput(
+        currentTask.repeating?.startDate,
+      );
+
       setFormData({
         name: currentTask.name || "",
         action: currentTask.action || "",
         description: currentTask.description || "",
         priority: currentTask.priority || "medium",
-        // Format dates correctly for datetime-local inputs
-        rangeStart: formatDateForInput(currentTask.range?.start),
-        rangeEnd: formatDateForInput(currentTask.range?.end),
+        rangeStart,
+        rangeEnd,
         estimatedWorkingTime:
           currentTask.estimatedWorkingTime?.toString() || "",
         estimatedWorkload: currentTask.estimatedWorkload?.toString() || "",
         repeating: !!currentTask.repeating,
         frequency: currentTask.repeating?.frequency || "daily",
         interval: currentTask.repeating?.interval || 1,
-        startDate: formatDateForInput(currentTask.repeating?.startDate),
+        startDate: repeatStartDate,
       });
     }
-  }, [currentTask, navigate]);
+  }, [currentTask]);
+
+  const validateDates = (
+    startDate: string,
+    endDate: string,
+    fieldName: "rangeStart" | "rangeEnd" | "startDate",
+  ): boolean => {
+    // Clear previous errors
+    setDateError(null);
+
+    // Skip validation if either date is empty
+    if (!startDate || !endDate) return true;
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const now = new Date();
+
+    // Always validate against current time, even for editing tasks
+    if (start < now && !currentTask) {
+      setDateError(`Start date must be in the future`);
+      return false;
+    }
+
+    // Validate start date is before end date
+    if (start > end) {
+      setDateError(`Start date cannot be after end date`);
+      return false;
+    }
+
+    return true;
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -71,6 +117,55 @@ export const AddTask: FC = observer(() => {
     >,
   ) => {
     const { name, value, type } = e.target;
+
+    // Special handling for date inputs
+    if (name === "rangeStart" || name === "rangeEnd") {
+      // Check if the new date is before now
+      if (name === "rangeStart" && !currentTask) {
+        const inputDate = new Date(value);
+        const now = new Date();
+
+        if (inputDate < now) {
+          setDateError("Start date must be in the future");
+          // Don't update the form with an invalid date
+          return;
+        }
+      }
+
+      const newData = {
+        ...formData,
+        [name]: value,
+      };
+
+      // Validate dates when either start or end changes
+      if (name === "rangeStart") {
+        validateDates(value, formData.rangeEnd, "rangeStart");
+      } else {
+        validateDates(formData.rangeStart, value, "rangeEnd");
+      }
+
+      setFormData(newData);
+      return;
+    }
+
+    // Special handling for repeating start date
+    if (name === "startDate") {
+      // Check if the new repeating start date is before now
+      if (!currentTask) {
+        const inputDate = new Date(value);
+        const now = new Date();
+
+        if (inputDate < now) {
+          setDateError("Schedule start date must be in the future");
+          // Don't update the form with an invalid date
+          return;
+        }
+      }
+
+      validateDates(value, formData.rangeEnd, "startDate");
+    }
+
+    // Handle regular inputs
     setFormData(prev => ({
       ...prev,
       [name]:
@@ -81,6 +176,16 @@ export const AddTask: FC = observer(() => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Final validation before submission
+    if (formData.rangeStart && formData.rangeEnd) {
+      if (
+        !validateDates(formData.rangeStart, formData.rangeEnd, "rangeStart")
+      ) {
+        return; // Don't submit if dates are invalid
+      }
+    }
+
+    // Rest of submission code remains the same
     const taskData: Partial<ITask> = {
       name: formData.name,
       action: formData.action,
@@ -193,7 +298,6 @@ export const AddTask: FC = observer(() => {
           {/* Time Range */}
           <div className={styles.formSection}>
             <h3>Execution Range</h3>
-
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label htmlFor="rangeStart">Start Date</label>
@@ -204,6 +308,8 @@ export const AddTask: FC = observer(() => {
                   value={formData.rangeStart}
                   onChange={handleInputChange}
                   className={styles.addTaskFormInput}
+                  min={currentTask ? undefined : currentDateTime} // Refresh the min datetime on each render
+                  required
                 />
               </div>
 
@@ -216,9 +322,17 @@ export const AddTask: FC = observer(() => {
                   value={formData.rangeEnd}
                   onChange={handleInputChange}
                   className={styles.addTaskFormInput}
+                  min={
+                    formData.rangeStart ||
+                    (currentTask ? undefined : currentDateTime)
+                  }
+                  required
                 />
               </div>
             </div>
+            {dateError && (
+              <div className={styles.errorMessage}>{dateError}</div>
+            )}
           </div>
 
           {/* Estimates */}
@@ -317,6 +431,7 @@ export const AddTask: FC = observer(() => {
                     value={formData.startDate}
                     onChange={handleInputChange}
                     className={styles.addTaskFormInput}
+                    min={currentTask ? undefined : currentDateTime} // Refresh the min datetime
                   />
                 </div>
               </div>
