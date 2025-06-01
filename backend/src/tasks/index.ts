@@ -58,6 +58,9 @@ export function addTasksRoutes(app: Express) {
     // Create new task
     app.post('/tasks', async (req, res) => {
         try {
+            if (req.body == undefined) {
+                throw new Error("request body is undefined");
+            }
             const taskData = req.body as TaskToAdd
             const newTask = await addTask(taskData)
 

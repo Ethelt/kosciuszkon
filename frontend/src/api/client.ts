@@ -31,6 +31,7 @@ class ApiClient {
     const config: RequestInit = {
       method,
       headers: {
+        'Content-Type': 'application/json',
         ...headers,
       },
     };

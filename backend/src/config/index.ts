@@ -12,6 +12,9 @@ export function addConfigRoutes(app: Express) {
 
     app.post("/config", async (req, res) => {
         try {
+            if (req.body == undefined) {
+                throw new Error("request body is undefined");
+            }
             const configData = req.body as PartialConfigToUpdate;
             const updatedConfig = await updateConfig(configData);
 
