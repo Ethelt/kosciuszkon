@@ -1,12 +1,10 @@
 import { FC, useContext, useEffect } from "react";
 import { observer } from "mobx-react";
-import { useNavigate } from "react-router-dom";
 
-import { Graph } from "@/components";
+import { AnalyticsGraph } from "@/components/AnalyticsGraph";
 import { StoreContext } from "@/store/StoreContext";
 
 import styles from "@/styles/pages/Dashboard.module.scss";
-import { AnalyticsGraph } from "@/components/AnalyticsGraph";
 
 export const Dashboard: FC = observer(() => {
   const store = useContext(StoreContext);
@@ -26,7 +24,6 @@ export const Dashboard: FC = observer(() => {
 
   return (
     <div className={styles.dashboard}>
-
       {/* Task Statistics Cards */}
       <div className={styles.statsGrid}>
         <div className={`${styles.statCard} ${styles.active}`}>
@@ -64,7 +61,7 @@ export const Dashboard: FC = observer(() => {
 
       {/* Analytics Graph */}
       <div className={styles.graphSection}>
-        <AnalyticsGraph/>
+        <AnalyticsGraph />
       </div>
     </div>
   );

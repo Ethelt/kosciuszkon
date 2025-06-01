@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { StoreContext } from "@/store/StoreContext";
 
@@ -27,10 +27,13 @@ const getCurrentDateTime = (): string => {
 };
 
 export const AddTask: FC = observer(() => {
+  const location = useLocation();
+  const { taskId } = location.state;
   const store = useContext(StoreContext);
-  const { currentTask, setCurrentTask, addTask, editTask } =
-    store.TasksStateStore;
+  const { getTaskById, addTask, editTask } = store.TasksStateStore;
   const navigate = useNavigate();
+
+  const currentTask = getTaskById(taskId) || null;
 
   // Don't use useState for currentDateTime as we want it to refresh on each render
   // This ensures the minimum time is always "now" and not the time when the component mounted
@@ -82,11 +85,7 @@ export const AddTask: FC = observer(() => {
     }
   }, [currentTask]);
 
-  const validateDates = (
-    startDate: string,
-    endDate: string,
-    fieldName: "rangeStart" | "rangeEnd" | "startDate",
-  ): boolean => {
+  const validateDates = (startDate: string, endDate: string): boolean => {
     // Clear previous errors
     setDateError(null);
 
@@ -143,9 +142,9 @@ export const AddTask: FC = observer(() => {
 
       // Validate dates when either start or end changes
       if (name === "rangeStart") {
-        validateDates(value, formData.rangeEnd, "rangeStart");
+        validateDates(value, formData.rangeEnd);
       } else {
-        validateDates(formData.rangeStart, value, "rangeEnd");
+        validateDates(formData.rangeStart, value);
       }
 
       setFormData(newData);
@@ -166,7 +165,7 @@ export const AddTask: FC = observer(() => {
         }
       }
 
-      validateDates(value, formData.rangeEnd, "startDate");
+      validateDates(value, formData.rangeEnd);
     }
 
     // Handle regular inputs
@@ -182,9 +181,7 @@ export const AddTask: FC = observer(() => {
 
     // Final validation before submission
     if (formData.rangeStart || formData.rangeEnd) {
-      if (
-        !validateDates(formData.rangeStart, formData.rangeEnd, "rangeStart")
-      ) {
+      if (!validateDates(formData.rangeStart, formData.rangeEnd)) {
         return; // Don't submit if dates are invalid
       }
     }
@@ -233,12 +230,10 @@ export const AddTask: FC = observer(() => {
     }
 
     // Reset form and navigate back
-    setCurrentTask(null);
     navigate("/tasks");
   };
 
   const handleCancel = () => {
-    setCurrentTask(null);
     navigate("/tasks");
   };
 
