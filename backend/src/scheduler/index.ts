@@ -29,10 +29,9 @@ export class Scheduler {
       zone: "utc",
     });
 
-    const { start, balances } = (await getBalanceEstimator()).getBalances(
-      startDate,
-      maxDeadlineDate
-    );
+    const { start, balances } = await (
+      await getBalanceEstimator()
+    ).getBalances(startDate, maxDeadlineDate);
 
     // console.log(startDate.toISO(), maxDeadline, balances.length);
     // balances.forEach((balance, index) => {
@@ -40,7 +39,7 @@ export class Scheduler {
     // });
 
     prioritySortedTasks.forEach((task) => {
-      const startDate = task.range.start;
+      const startDate = task.range.start ?? DateTime.now().toISO();
       const endDate = task.range.end;
 
       const startIndex = startDate
