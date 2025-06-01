@@ -39,6 +39,7 @@ function calculateSolarPanelEffectiveness(
   cloudCover: number,
   snowDepth: number
 ): number {
+  const STANDARD_EFFECTIVENESS = 0.2;
   // Standard test condition temperature
   const STANDARD_TEMP = 25;
 
@@ -60,7 +61,11 @@ function calculateSolarPanelEffectiveness(
 
   // Calculate final effectiveness as ratio of ideal conditions
   const effectiveness =
-    sunshineFactor * temperatureFactor * cloudFactor * snowFactor;
+    STANDARD_EFFECTIVENESS *
+    sunshineFactor *
+    temperatureFactor *
+    cloudFactor *
+    snowFactor;
 
   return effectiveness;
 }
