@@ -29,9 +29,10 @@ export class Scheduler {
       zone: "utc",
     });
 
-    const { start, balances } = await (
-      await getBalanceEstimator()
-    ).getBalances(startDate, maxDeadlineDate);
+    const { start, balances } = (await getBalanceEstimator()).getBalances(
+      startDate,
+      maxDeadlineDate
+    );
 
     // console.log(startDate.toISO(), maxDeadline, balances.length);
     // balances.forEach((balance, index) => {

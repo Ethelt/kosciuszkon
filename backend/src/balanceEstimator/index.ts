@@ -6,45 +6,49 @@ import { getAverageEffectiveness } from "./averageEffectiveness";
 class BalanceEstimator {
   private balances: Map<string, number>;
   private dailyAveragesPerMonth: number[] = [];
+  private config: any;
 
   constructor() {
     this.balances = new Map();
   }
 
+  async initialize() {
+    this.config = await getConfig();
+    this.dailyAveragesPerMonth = await getAverageEffectiveness(this.config);
+    await this.getBalancesForNextWeek();
+  }
+
   async getDefaultAverages() {
-    const config = await getConfig();
-    this.dailyAveragesPerMonth = await getAverageEffectiveness(config);
+    this.dailyAveragesPerMonth = await getAverageEffectiveness(this.config);
   }
 
   async getBalancesForNextWeek() {
-    const config = await getConfig();
     const weather = await getWeather(
-      config.coordinates.latitude,
-      config.coordinates.longitude
+      this.config.coordinates.latitude,
+      this.config.coordinates.longitude
     );
-    await Promise.all(
-      weather.map(async (hour) => {
-        const energyIncome = config.maxInstallationPower * hour.effectiveness;
-        const energyCost = await this.getEnergyCost(hour.date);
-        this.balances.set(hour.date, energyIncome - energyCost);
-      })
-    );
+    weather.forEach((hour) => {
+      const energyIncome =
+        this.config.maxInstallationPower * hour.effectiveness;
+      const energyCost = this.getEnergyCost(hour.date);
+      this.balances.set(hour.date, energyIncome - energyCost);
+    });
   }
 
-  async getBalances(
+  getBalances(
     from: DateTime,
     to: DateTime
-  ): Promise<{
+  ): {
     start: DateTime;
     balances: { balance: number; freeDuration: number; time: DateTime }[];
-  }> {
+  } {
     const balances = [];
     let currentDateTime = from;
 
     while (currentDateTime < to) {
       balances.push({
         time: currentDateTime,
-        balance: await this.getBalance(currentDateTime),
+        balance: this.getBalance(currentDateTime),
         freeDuration: 60 * 60,
       });
       currentDateTime = currentDateTime.plus({ hours: 1 });
@@ -53,18 +57,18 @@ class BalanceEstimator {
     return { start: from, balances };
   }
 
-  private async getBalance(date: DateTime): Promise<number> {
+  private getBalance(date: DateTime): number {
     const key = date.setZone("UTC").toISO()!;
     if (this.balances.has(key)) {
       return this.balances.get(key) || 0;
     }
 
-    const balance = await this.getDefaultBalance(date);
+    const balance = this.getDefaultBalance(date);
     this.balances.set(key, balance);
     return balance;
   }
 
-  private async getDefaultBalance(date: DateTime): Promise<number> {
+  private getDefaultBalance(date: DateTime): number {
     const hour = date.hour;
     // Calculate solar panel effectiveness based on hour of the day and seasonal daylight hours in Poland
     // Peak effectiveness is around solar noon, with gradual decline towards sunrise/sunset
@@ -101,21 +105,20 @@ class BalanceEstimator {
 
     const energyIncome =
       this.dailyAveragesPerMonth[date.month - 1] * hourlyEffectiveness;
-    const energyCost = await this.getEnergyCost(date.toISO()!);
+    const energyCost = this.getEnergyCost(date.toISO()!);
     return energyIncome - energyCost;
   }
 
-  private async getEnergyCost(date: string): Promise<number> {
-    const config = await getConfig();
-    const baseConsumption = config.averageHourlyConsumption;
-    
+  private getEnergyCost(date: string): number {
+    const baseConsumption = this.config.averageHourlyConsumption;
+
     const dateTime = DateTime.fromISO(date);
     const hour = dateTime.hour;
-    
+
     // Data center energy usage pattern - higher during business hours, lower at night
     // Peak usage during business hours (9-17), moderate in evening (18-22), lowest at night (23-8)
     let hourlyMultiplier = 1.0;
-    
+
     if (hour >= 9 && hour <= 17) {
       // Business hours - peak usage (110-130% of base)
       hourlyMultiplier = 1.1 + 0.2 * Math.sin(((hour - 9) / 8) * Math.PI);
@@ -127,7 +130,7 @@ class BalanceEstimator {
       const nightHour = hour >= 23 ? hour - 23 : hour + 1; // Normalize to 0-9 range
       hourlyMultiplier = 0.7 + 0.2 * Math.sin((nightHour / 9) * Math.PI);
     }
-    
+
     return baseConsumption * hourlyMultiplier;
   }
 }
@@ -137,8 +140,7 @@ let balanceEstimator: BalanceEstimator;
 export async function getBalanceEstimator(): Promise<BalanceEstimator> {
   if (!balanceEstimator) {
     balanceEstimator = new BalanceEstimator();
-    await balanceEstimator.getDefaultAverages();
-    await balanceEstimator.getBalancesForNextWeek();
+    await balanceEstimator.initialize();
   }
   return balanceEstimator;
 }
