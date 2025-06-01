@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { Task } from "@arabska/shared/src/types";
 import { getConfig } from "../config/model";
 import { dateToSlotsNumber, getTaskUsage } from "../utils";
-import { getAllWaitingTasks } from "../tasks/model";
+import { getAllWaitingTasks, updateTask } from "../tasks/model";
 
 export class Scheduler {
   constructor(private readonly balanceEstimator: BalanceEstimator) {}
@@ -96,6 +96,10 @@ export class Scheduler {
     });
 
     // console.log("queue", queue);
+    for (const task of queue) {
+      console.log("Saving task", task);
+      await updateTask(task);
+    }
     return queue;
   }
 
