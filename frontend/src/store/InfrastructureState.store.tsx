@@ -23,6 +23,12 @@ export class InfrastructureStateStore {
     try {
       const response = await client.get<IFormSystemConfig>("/config");
       this.formData = response.data;
+      this.formData.coordinates.latitude = Number(
+        this.formData.coordinates.latitude,
+      );
+      this.formData.coordinates.longitude = Number(
+        this.formData.coordinates.longitude,
+      );
     } catch (error) {
       console.error("Failed to fetch infrastructure data:", error);
     }
