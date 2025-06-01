@@ -6,17 +6,15 @@ import { Graph } from "@/components";
 import { StoreContext } from "@/store/StoreContext";
 
 import styles from "@/styles/pages/Dashboard.module.scss";
+import { AnalyticsGraph } from "@/components/AnalyticsGraph";
 
 export const Dashboard: FC = observer(() => {
-  const navigate = useNavigate();
   const store = useContext(StoreContext);
   const { fetchTasks, taskList } = store.TasksStateStore;
-  const { chartData, getChartData } = store.ChartStateStore;
 
   useEffect(() => {
     fetchTasks();
-    getChartData();
-  }, [fetchTasks, getChartData]);
+  }, [fetchTasks]);
 
   // Calculate task statistics
   const activeTasks = taskList.filter(
@@ -66,13 +64,7 @@ export const Dashboard: FC = observer(() => {
 
       {/* Analytics Graph */}
       <div className={styles.graphSection}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionIcon}>📊</span>
-          <h3>Task Analytics</h3>
-        </div>
-        <div className={styles.graphContainer}>
-          <Graph data={chartData} />
-        </div>
+        <AnalyticsGraph/>
       </div>
     </div>
   );
