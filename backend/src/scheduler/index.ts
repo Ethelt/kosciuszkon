@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { Task } from "@arabska/shared/src/types";
 import { getConfig } from "../config/model";
 import { dateToSlotsNumber, getTaskUsage } from "../utils";
-import { getAllWaitingTasks } from "../tasks/model";
+import { getAllWaitingTasks, updateTask } from "../tasks/model";
 
 export class Scheduler {
   constructor(private readonly balanceEstimator: BalanceEstimator) {}
@@ -20,8 +20,9 @@ export class Scheduler {
 
     const prioritySortedTasks = tasks.toSorted((a, b) => orderPriority(a, b));
 
-    const maxDeadline = maxBy(prioritySortedTasks, (t) => t.range.end)?.range
-      .end!;
+    const maxDeadline =
+      maxBy(prioritySortedTasks, (t) => t.range.end)?.range.end ??
+      DateTime.now().setZone("utc").endOf("month").toISO()!;
 
     const startDate = DateTime.now().setZone("utc").startOf("day");
     const maxDeadlineDate = DateTime.fromISO(maxDeadline, {
@@ -33,11 +34,7 @@ export class Scheduler {
       maxDeadlineDate
     );
 
-    // console.log(
-    //   startDate.toISO(),
-    //   maxDeadline,
-    //   balances.map((b) => b.balance)
-    // );
+    // console.log(startDate.toISO(), maxDeadline, balances.length);
     // balances.forEach((balance, index) => {
     //   console.log(index, balance);
     // });
@@ -49,7 +46,9 @@ export class Scheduler {
       const startIndex = startDate
         ? dateToSlotsNumber(start.toISO()!, startDate)
         : 0;
-      const endIndex = endDate ? dateToSlotsNumber(start.toISO()!, endDate) : 0;
+      const endIndex = endDate
+        ? dateToSlotsNumber(start.toISO()!, endDate)
+        : balances.length;
 
       const applicableSpots = balances.slice(startIndex, endIndex);
       // breaks when no spot has enough time
@@ -97,6 +96,10 @@ export class Scheduler {
     });
 
     // console.log("queue", queue);
+    for (const task of queue) {
+      console.log("Saving task", task);
+      await updateTask(task);
+    }
     return queue;
   }
 
