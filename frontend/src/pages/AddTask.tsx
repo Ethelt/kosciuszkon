@@ -28,7 +28,8 @@ export const AddTask: FC = observer(() => {
   const { getTaskById, addTask, editTask } = store.TasksStateStore;
   const navigate = useNavigate();
   const location = useLocation();
-  const { taskId } = location.state;
+
+  const taskId = location.state?.taskId || null;
 
   console.log(location, location.state, taskId);
 
