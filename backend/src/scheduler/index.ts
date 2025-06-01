@@ -7,7 +7,7 @@ import { dateToSlotsNumber, getTaskUsage } from "../utils";
 import { getAllWaitingTasks, updateTask } from "../tasks/model";
 
 export class Scheduler {
-  constructor() {}
+  constructor() { }
 
   async scheduleAllTasks(): Promise<Task[]> {
     const tasks = await this.loadTasks();
@@ -29,14 +29,10 @@ export class Scheduler {
       zone: "utc",
     });
 
-    const { start, balances } = await (
-      await getBalanceEstimator()
-    ).getBalances(startDate, maxDeadlineDate);
-
-    // console.log(startDate.toISO(), maxDeadline, balances.length);
-    // balances.forEach((balance, index) => {
-    //   console.log(index, balance);
-    // });
+    const { start, balances } = (await getBalanceEstimator()).getBalances(
+      startDate,
+      maxDeadlineDate
+    );
 
     prioritySortedTasks.forEach((task) => {
       const startDate = task.range.start ?? DateTime.now().toISO();
@@ -79,12 +75,6 @@ export class Scheduler {
         foundSpot.balance -= usage;
         foundSpot.freeDuration -= task.estimatedWorkingTime ?? 3600;
 
-        // console.log(
-        //   "found",
-        //   foundSpot,
-        //   usage,
-        //   task.estimatedWorkingTime ?? 3600
-        // );
       } else {
         console.log("No spot found for task", task);
         // Backup: find spot with highest available freeDuration
@@ -119,9 +109,8 @@ export class Scheduler {
       }
     });
 
-    // console.log("queue", queue);
     for (const task of queue) {
-      console.log("Saving task", task);
+      console.debug("Updating task planned execution", task);
       await updateTask(task);
     }
     return queue;

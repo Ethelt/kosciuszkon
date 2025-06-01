@@ -19,7 +19,6 @@ export class TasksStateStore {
       const response = await client.get<{ success: boolean; data: ITask[] }>(
         "/tasks",
       );
-      console.log(response.data.data);
       this.taskList = response.data.data;
     } catch (error) {
       console.error("Failed to fetch infrastructure data:", error);

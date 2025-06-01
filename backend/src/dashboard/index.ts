@@ -53,7 +53,7 @@ async function generateDashboardData(date: Date): Promise<DashboardChartData> {
 
   // Generate hours array
   const balancesEstimator = await getBalanceEstimator();
-  const balancesData = await balancesEstimator.getBalances(
+  const balancesData = balancesEstimator.getBalances(
     DateTime.fromJSDate(startDate),
     DateTime.fromJSDate(endDate)
   );
