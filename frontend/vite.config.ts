@@ -87,15 +87,15 @@ export default ({ mode }: { mode: string }) => {
     server:
       isDevelopment && certificatesExist
         ? {
-          https: {
-            key: fs.readFileSync(keyPath),
-            cert: fs.readFileSync(certPath),
-          },
-          host: "0.0.0.0",
-        }
+            https: {
+              key: fs.readFileSync(keyPath),
+              cert: fs.readFileSync(certPath),
+            },
+            host: "0.0.0.0",
+          }
         : {
-          host: "0.0.0.0",
-        },
+            host: "0.0.0.0",
+          },
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"),

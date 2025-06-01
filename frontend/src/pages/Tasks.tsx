@@ -9,8 +9,7 @@ import styles from "@/styles/pages/Tasks.module.scss";
 export const Tasks: FC = observer(() => {
   const navigate = useNavigate();
   const store = useContext(StoreContext);
-  const { fetchTasks, taskList, setCurrentTask, deleteTask } =
-    store.TasksStateStore;
+  const { fetchTasks, taskList, deleteTask } = store.TasksStateStore;
   const [activeFilter, setActiveFilter] = useState<ITaskStatuses | "all">(
     "all",
   );
@@ -124,8 +123,10 @@ export const Tasks: FC = observer(() => {
                     className={styles.actionButton}
                     title="Edit"
                     onClick={() => {
-                      setCurrentTask(task);
-                      navigate("/tasks/edit");
+                      navigate("/tasks/edit", {
+                        state: { taskId: task.id },
+                        replace: true,
+                      });
                     }}>
                     ✏️
                   </button>
