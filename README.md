@@ -1,4 +1,4 @@
-# EcoJob - Kościuszkon Hackathon Project
+# GreenJob - Kościuszkon 2025 Hackathon Project
 
 Here is the setup for the GreenJob project, created for the Kościuszkon Hackathon 2025. This is a full-stack application developed by the "Arabska na grubym enjoyers" team in a monorepo structure. Below, you'll find instructions for setting up both the backend and frontend components of the project.
 
